@@ -2,9 +2,14 @@
 
 ## 1 Channel Light Fan Dimmer Module
 > https://www.techshopbd.com/product-categories/modules/3427/1-channel-light-fan-dimmer-module-techshop-bangladesh
+
 > https://blog.techshopbd.com/2-channel-light-fan-dimmer-module-%e0%a6%95%e0%a6%bf%e0%a6%ad%e0%a6%be%e0%a6%ac%e0%a7%87-%e0%a6%ac%e0%a7%8d%e0%a6%af%e0%a6%ac%e0%a6%b9%e0%a6%be%e0%a6%b0-%e0%a6%95%e0%a6%b0%e0%a6%ac%e0%a7%8b/
->
-```ino
+
+> https://playground.arduino.cc/Code/Timer1/
+
+> https://www.arduino.cc/reference/en/language/functions/external-interrupts/attachinterrupt/
+
+```cpp
 #include <TimerOne.h>  // Avaiable from http://www.arduino.cc/playground/Code/Timer1
 volatile int i=0;               // Variable to use as a counter
 volatile boolean zero_cross=0;  // Boolean to store a "switch" to tell us if we have crossed zero
