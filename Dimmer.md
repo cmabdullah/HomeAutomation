@@ -8,6 +8,19 @@
 > https://playground.arduino.cc/Code/Timer1/
 
 > https://www.arduino.cc/reference/en/language/functions/external-interrupts/attachinterrupt/
+>
+
+>https://playground.arduino.cc/Main/ACPhaseControl/
+>
+>https://www.raspberrypi.org/forums/viewtopic.php?t=148936
+>
+>https://github.com/PaulStoffregen/TimerOne
+>
+>https://playground.arduino.cc/Main/ACPhaseControl/
+>
+>http://esp8266-projects.org/2017/04/raspberry-pi-domoticz-ac-dimmer-part-1/
+>
+>https://playground.arduino.cc/Code/Timer1/
 
 ```cpp
 #include <TimerOne.h>  // Avaiable from http://www.arduino.cc/playground/Code/Timer1
