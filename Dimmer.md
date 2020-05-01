@@ -21,6 +21,8 @@
 >http://esp8266-projects.org/2017/04/raspberry-pi-domoticz-ac-dimmer-part-1/
 >
 >https://playground.arduino.cc/Code/Timer1/
+>
+>https://raspberrypi.stackexchange.com/questions/8808/zero-crossing-activated-relay
 
 ```cpp
 #include <TimerOne.h>  // Avaiable from http://www.arduino.cc/playground/Code/Timer1

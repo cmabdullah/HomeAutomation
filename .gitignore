@@ -5,7 +5,7 @@
 *.iws
 *.iml
 *.ipr
-
+*.out
 !/.idea
 /.idea/*
 */**/.idea
