@@ -24,25 +24,26 @@ ulong64 timer(unsigned char reset){//ulong64 timer()
 
    printf("t.tv_nsec : %ld  \n", t.tv_nsec);
    printf("lt.tv_nsec : %ld \n", lt.tv_nsec);
-   //int r = ((ulong64)(t.tv_sec - lt.tv_sec))*1000 + (t.tv_nsec - lt.tv_nsec)/1000000;
-   ulong64 r = ((ulong64)(t.tv_sec - lt.tv_sec))*1000 + (t.tv_nsec - lt.tv_nsec)/1000000;
+   int r = ((ulong64)(t.tv_sec - lt.tv_sec))*1000 + (t.tv_nsec - lt.tv_nsec)/1000000;
+   //ulong64 r = ((ulong64)(t.tv_sec - lt.tv_sec))*1000 + (t.tv_nsec - lt.tv_nsec)/1000000;
    /// get microseconds, get nanoseconds
 
-   //printf("r %d ", r);
-   printf("r %llu \n", r);
+   printf("r %d ", r);
+   //printf("r %llu \n", r);
    return r;
 }
 
 int main() {
    //std::cout << sizeof(long)*8 << std::endl;
-   // unsigned long long x = timer(240);
+   unsigned long long x = timer(0);
    //Calling timer(1) resets it, calling timer(0) returns time since reset.
-   ulong64 x = timer(0);//max 255 if put 0 res correct else 0 dont know why
+   //ulong64 x = timer(0);//max 255 if put 0 res correct else 0 dont know why
    //Calling timer(1) resets it,
    //calling timer(0) returns time since reset.
-   printf("result %llu \n", x);
-   //printf("%lld", x);
+   //printf("result %llu \n", x);
+   printf("%lld", x);
    //ulong64 -> unsigned long long int
+   //You need to link against rt library for this to compile - add -lrt to your gcc command.
 }
 
 /***
