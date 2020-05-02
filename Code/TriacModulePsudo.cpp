@@ -3,14 +3,16 @@
  * Wait for Interrupt test program - ISR method
  to do make it parallel
  read dim value
- ***********************************************************************
  */
-#include <iostream>
-#include <stdio.h>
-#include <string.h>
-#include <errno.h>
-#include <stdlib.h>
-#include <wiringPi.h>
+#include<iostream>
+#include<cstdlib>
+#include<stdio.h>
+#include<string.h>
+#include<errno.h>
+#include<stdlib.h>
+#include<wiringPi.h>
+#include<pthread.h>
+#include<sched.h>
 
 using namespace std;
 
@@ -23,7 +25,7 @@ using namespace std;
 #define PIN_HIGH 1 //1 == HIGH
 #define PIN_LOW 0 //2 == LOW
 
-volatile boolean zeroCross=0;  
+volatile boolean zeroCross=0;
 // Boolean to store a "switch" to tell us if we have crossed zero
 volatile int stepCounter = 0;  
 // Should be declared volatile to make sure the compiler doesn't cache it.
@@ -72,7 +74,7 @@ int main (void){
 
   for (;;) {
 
-    printf ("Waiting ... ") ;
+    printf ("Waiting ... ");
 
     delayMicroseconds(FREQ_STEP);
 

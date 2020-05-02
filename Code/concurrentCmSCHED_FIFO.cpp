@@ -2,14 +2,24 @@
 #include<cstdlib>
 #include<pthread.h>
 #include<sched.h>
-
+#include <stdio.h>
+#include <stdlib.h>
 using namespace std;
 //https://news.ycombinator.com/item?id=21926563
 //https://stackoverflow.com/questions/20722615/sched-fifo-process-with-priority-of-99-gets-preempted
 //https://lwn.net/Articles/296419/
 //https://stackoverflow.com/questions/31404770/unable-to-change-thread-policy-to-sched-fifo
 #define NUM_THREADS 6
-volatile int stepCounter = 0;  
+volatile int stepCounter = 0;
+
+void readDimValueFromTextFile(); 
+void *Processor(void *threadid);
+void *Remot1(void *threadid);
+void *Remot2(void *threadid);
+void *Remot3(void *threadid);
+void *Remot4(void *threadid);
+void *Remot5(void *threadid);
+
 void *Processor(void *threadid) {
   long tid;
   int k = 0;
@@ -72,7 +82,15 @@ void *Remot4(void *threadid) {
   for (j = 0 ; j< 20;j++){
     stepCounter++;
     printf("Remot 4 thread %d stepCounter %d \n", j, stepCounter);
+
+    if (j == 15){
+    printf("stepCounter old value %d ",stepCounter);
+      readDimValueFromTextFile();
+      printf("stepCounter new value %d ",stepCounter);
+    }
+
   }
+
   pthread_exit(NULL);
 }
 
@@ -89,6 +107,26 @@ void *Remot5(void *threadid) {
   pthread_exit(NULL);
 }
 
+
+void readDimValueFromTextFile(){
+
+   int num;
+   FILE *fptr;
+
+   if ((fptr = fopen("test.txt","r")) == NULL) {       // checks if file exists
+       puts("File not exists");
+       exit(1);                    // for exit(1) is required #include <stdlib.h>
+   } else{
+      fscanf(fptr,"%d", &num);
+      printf("Remote parameter is:  %d\n", num);
+      fclose(fptr);
+      printf("stepCounter is:  %d\n", stepCounter);
+      stepCounter = stepCounter+num;
+      printf("agter read from file stepCounter new value is:  %d\n", stepCounter);
+
+   }
+}
+
 int main () {
   pthread_t threads[NUM_THREADS];
   int processor, remot1, remot2,remot3,remot4,remot5;
@@ -103,7 +141,7 @@ int main () {
 
   //SCHED_FIFO is a simple scheduling algorithm without time slicing.
   pthread_attr_setschedpolicy(&thread_attr, SCHED_FIFO);  // Set attributes to FIFO policy
-  param.sched_priority = 90;
+  param.sched_priority = 50;
   std::cout << "Trying to set thread realtime prio = " << param.sched_priority << std::endl;
 
   ret = pthread_attr_setschedparam(&thread_attr, &param); // Set attributes to priority 95
@@ -162,7 +200,8 @@ int main () {
 //g++ -o a.out concurrentCmSCHED_RR.cpp -lpthread && ./a.out
 
 /****
-
+Kernels shipped since 2.6.25 have set the rt_bandwidth value for the default group to be 0.95 out of every 1.0 seconds.
+In other words, the group scheduler is configured, by default, to reserve 5% of the CPU for non-SCHED_FIFO tasks.
 SCHED_FIFO and SCHED_RR are so called "real-time" policies.
 SCHED_FIFO and SCHED_RR are so called "real-time" policies. They implement the fixed-priority real-time scheduling specified by the POSIX standard.
 Tasks with these policies preempt every other task, which can thus easily go into starvation (if they don't release the CPU).
