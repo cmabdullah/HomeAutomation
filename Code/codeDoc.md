@@ -1,18 +1,597 @@
 # resources
 
+> https://arduinodiy.wordpress.com/2012/10/19/dimmer-arduino/
+
+> https://arduinodiy.wordpress.com/category/dimmer/
+
+> https://gist.github.com/jmas/e817ddd9c75b1789ea61cca3a82bd8b5
+
+> https://raspberrypi.stackexchange.com/questions/8808/zero-crossing-activated-relay
+
 > http://wiringpi.com/reference/priority-interrupts-and-threads/
->
->https://github.com/ngs/wiringPi/blob/master/examples/isr.c
->
->
->
->>https://raspberrypi.stackexchange.com/questions/8808/zero-crossing-activated-relay
->
+
+> https://github.com/ngs/wiringPi/blob/master/examples/isr.c
+
+> https://www.techshopbd.com/product-categories/modules/3427/1-channel-light-fan-dimmer-module-techshop-bangladesh
+
+> https://playground.arduino.cc/Code/Timer1/
+
+> https://www.arduino.cc/reference/en/language/functions/external-interrupts/attachinterrupt/
+
+> https://playground.arduino.cc/Main/ACPhaseControl/
+
+> https://www.raspberrypi.org/forums/viewtopic.php?t=148936
+
+> https://github.com/PaulStoffregen/TimerOne
+
+> https://playground.arduino.cc/Main/ACPhaseControl/
+
+> http://esp8266-projects.org/2017/04/raspberry-pi-domoticz-ac-dimmer-part-1/
+
+> https://playground.arduino.cc/Code/Timer1/
+
+> https://raspberrypi.stackexchange.com/questions/8808/zero-crossing-activated-relay
+
+> https://www.techshopbd.com/product-categories/modules/3427/1-channel-light-fan-dimmer-module-techshop-bangladesh
+
+> https://blog.techshopbd.com/2-channel-light-fan-dimmer-module-%e0%a6%95%e0%a6%bf%e0%a6%ad%e0%a6%be%e0%a6%ac%e0%a7%87-%e0%a6%ac%e0%a7%8d%e0%a6%af%e0%a6%ac%e0%a6%b9%e0%a6%be%e0%a6%b0-%e0%a6%95%e0%a6%b0%e0%a6%ac%e0%a7%8b/
+
+Ulog64
+> https://raspberrypi.stackexchange.com/questions/8808/zero-crossing-activated-relay
+
+> https://github.com/OP-TEE/optee_os/blob/master/core/lib/libtomcrypt/src/prngs/fortuna.c
+
+> https://stackoverflow.com/questions/2844/how-do-you-format-an-unsigned-long-long-int-using-printf
+
+> https://lore.kernel.org/lkml/20190605144116.28553-3-alexander.sverdlin@nokia.com/T/
+
+> https://stackoverflow.com/questions/4160945/long-long-int-vs-long-int-vs-int64-t-in-c
+
+> https://stackoverflow.com/questions/384502/what-is-the-bit-size-of-long-on-64-bit-windows
+
+> https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types?redirectedfrom=MSDN
+
+> overflow https://docs.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-4-c4754?view=vs-2019
+
+Concurrency
+> http://www.yonch.com/tech/82-linux-thread-priority
+
+> https://raspberrypi.stackexchange.com/questions/8808/zero-crossing-activated-relay
+
+> https://www.princeton.edu/~cad/emsim/files/example.c
+
+> http://man7.org/linux/man-pages/man3/pthread_setschedparam.3.html
+
+> https://stackoverflow.com/questions/3649281/how-to-increase-thread-priority-in-pthreads
+
+> https://en.m.wikipedia.org/wiki/Native_POSIX_Thread_Library
+
+> You don't need to hack the kernel. You just need to move the process out of the scheduler queue.
+
+> https://www.raspberrypi.org/forums/viewtopic.php?t=242590
+
+> https://news.ycombinator.com/item?id=21926563
+
+> https://stackoverflow.com/questions/20722615/sched-fifo-process-with-priority-of-99-gets-preempted
+
+> https://lwn.net/Articles/296419/
+
+> https://stackoverflow.com/questions/31404770/unable-to-change-thread-policy-to-sched-fifo
+
+> https://github.com/ngs/wiringPi/blob/master/examples/isr.c
+
+> https://github.com/ngs/wiringPi/blob/master/examples/wfi.c
+
+> http://wiringpi.com/reference/priority-interrupts-and-threads/
+
+> http://wiringpi.com/reference/priority-interrupts-and-threads/
+
+> https://github.com/ngs/wiringPi/blob/master/examples/isr.c
+
+> https://www.digikey.com/en/maker/blogs/2019/increase-your-knowledge-of-the-gpio-c-library
+
+# Concurrency
+
+Kernels shipped since 2.6.25 have set the rt_bandwidth value for the default group to be 0.95 out of every 1.0 seconds.
+In other words, the group scheduler is configured, by default, to reserve 5% of the CPU for non-SCHED_FIFO tasks.
+SCHED_FIFO and SCHED_RR are so called "real-time" policies. They implement the fixed-priority real-time scheduling specified by the POSIX standard.
+Tasks with these policies preempt every other task, which can thus easily go into starvation (if they don't release the CPU).
+
+### concurrency thread scheduling SCHED_RR
+
+```cpp
+#include<iostream>
+#include<cstdlib>
+#include<pthread.h>
+#include<sched.h>
+
+using namespace std;
+#define NUM_THREADS 6
+volatile int stepCounter = 0;  
+void *Processor(void *threadid) {
+  long tid;
+  int k = 0;
+  tid = (long)threadid;
+  cout << "Hello Processor! Thread ID, " << tid << endl;
+
+  for (k = 0 ; k< 20;k++){
+  stepCounter++;
+    printf("processor thread %d stepCounter %d \n", k, stepCounter);
+  }
+
+  pthread_exit(NULL);
+}
+
+void *Remot1(void *threadid) {
+  long tid;
+  int j = 0;
+  tid = (long)threadid;
+  cout << "\nHello Remot 1! Thread ID, " << tid << endl;
+
+  for (j = 0 ; j< 20;j++){
+  stepCounter++;
+    printf("Remot 1 thread %d stepCounter %d \n", j, stepCounter);
+  }
+  pthread_exit(NULL);
+}
+
+void *Remot2(void *threadid) {
+  long tid;
+  int j = 0;
+  tid = (long)threadid;
+  cout << "\nHello Remot2 ! Thread ID, " << tid << endl;
+
+  for (j = 0 ; j< 20;j++){
+  stepCounter++;
+    printf("Remot 2 thread %d stepCounter %d \n", j, stepCounter);
+  }
+  pthread_exit(NULL);
+}
+
+void *Remot3(void *threadid) {
+  long tid;
+  int j = 0;
+  tid = (long)threadid;
+  cout << "\nHello Remot 3 ! Thread ID, " << tid << endl;
+
+  for (j = 0 ; j< 20;j++){
+  stepCounter++;
+    printf("Remot 3 thread %d stepCounter %d \n", j, stepCounter);
+  }
+  pthread_exit(NULL);
+}
+
+void *Remot4(void *threadid) {
+  long tid;
+  int j = 0;
+  tid = (long)threadid;
+  cout << "\nHello Remot 4 ! Thread ID, " << tid << endl;
+
+  for (j = 0 ; j< 20;j++){
+  stepCounter++;
+    printf("Remot 4 thread %d stepCounter %d \n", j, stepCounter);
+  }
+  pthread_exit(NULL);
+}
+
+void *Remot5(void *threadid) {
+  long tid;
+  int j = 0;
+  tid = (long)threadid;
+  cout << "\nHello Remot 5 ! Thread ID, " << tid << endl;
+
+  for (j = 0 ; j< 20;j++){
+  stepCounter++;
+    printf("Remot 5 thread %d stepCounter %d \n", j, stepCounter);
+  }
+  pthread_exit(NULL);
+}
+
+int main () {
+  pthread_t threads[NUM_THREADS];
+  int processor, remot1, remot2,remot3,remot4,remot5;
+  int i;
+  int ret;
+
+  pthread_t processorThread;
+  struct sched_param  param;
+  pthread_attr_t thread_attr;
+  pthread_attr_init(&thread_attr);  // Initialise the attributes
+  pthread_attr_setschedpolicy(&thread_attr, SCHED_RR);  // Set attributes to RR policy
+  param.sched_priority = 95;
+  pthread_attr_setschedparam(&thread_attr, &param); // Set attributes to priority 95
+
+  cout << "\nmain() : creating thread, Remot 1" << endl;
+  remot1 = pthread_create(&threads[1], NULL, Remot1, (void *)1);
+
+  cout << "\nmain() : creating thread, Remot2 " << endl;
+  remot2 = pthread_create(&threads[2], NULL, Remot2, (void *)2);
+
+  cout << "\nmain() : creating thread, Remot3 " << endl;
+  remot3 = pthread_create(&threads[3], NULL, Remot3, (void *)3);
+
+  cout << "\nmain() : creating thread, Remot4 " << endl;
+  remot4 = pthread_create( &threads[4], NULL, Remot4, (void *)4);
+
+  cout << "\nmain() : creating thread, Processor " << endl;
+  processor = pthread_create(&processorThread, &thread_attr, Processor, (void *)6);
+
+  cout << "\nmain() : creating thread, Remot5 " << endl;
+  remot5 = pthread_create(&threads[5], NULL, Remot5, (void *)5);
+
+  pthread_exit(NULL);
+}
+
+// g++ -o a.out concurrentCmSCHED_RR.cpp && ./a.out
+//g++ -o a.out concurrentCmSCHED_RR.cpp -lpthread && ./a.out
+
+```
+
+### concurrency thread scheduling SCHED_FIFO
+
+```cpp
+#include<iostream>
+#include<cstdlib>
+#include<pthread.h>
+#include<sched.h>
+#include <stdio.h>
+#include <stdlib.h>
+using namespace std;
+#define NUM_THREADS 6
+volatile int stepCounter = 0;
+
+void readDimValueFromTextFile(); 
+void *Processor(void *threadid);
+void *Remot1(void *threadid);
+void *Remot2(void *threadid);
+void *Remot3(void *threadid);
+void *Remot4(void *threadid);
+void *Remot5(void *threadid);
+
+void *Processor(void *threadid) {
+  long tid;
+  int k = 0;
+  tid = (long)threadid;
+  cout << "Hello Processor! Thread ID, " << tid << endl;
+
+  for (k = 0 ; k< 20;k++){
+    stepCounter++;
+    printf("processor thread %d stepCounter %d \n", k, stepCounter);
+  }
+
+  pthread_exit(NULL);
+}
+
+void *Remot1(void *threadid) {
+  long tid;
+  int j = 0;
+  tid = (long)threadid;
+  cout << "\nHello Remot 1! Thread ID, " << tid << endl;
+
+  for (j = 0 ; j< 20;j++){
+    stepCounter++;
+    printf("Remot 1 thread %d stepCounter %d \n", j, stepCounter);
+  }
+  pthread_exit(NULL);
+}
+
+void *Remot2(void *threadid) {
+  long tid;
+  int j = 0;
+  tid = (long)threadid;
+  cout << "\nHello Remot2 ! Thread ID, " << tid << endl;
+
+  for (j = 0 ; j< 20;j++){
+    stepCounter++;
+    printf("Remot 2 thread %d stepCounter %d \n", j, stepCounter);
+  }
+  pthread_exit(NULL);
+}
+
+void *Remot3(void *threadid) {
+  long tid;
+  int j = 0;
+  tid = (long)threadid;
+  cout << "\nHello Remot 3 ! Thread ID, " << tid << endl;
+
+  for (j = 0 ; j< 20;j++){
+    stepCounter++;
+    printf("Remot 3 thread %d stepCounter %d \n", j, stepCounter);
+  }
+  pthread_exit(NULL);
+}
+
+void *Remot4(void *threadid) {
+  long tid;
+  int j = 0;
+  tid = (long)threadid;
+  cout << "\nHello Remot 4 ! Thread ID, " << tid << endl;
+
+  for (j = 0 ; j< 20;j++){
+    stepCounter++;
+    printf("Remot 4 thread %d stepCounter %d \n", j, stepCounter);
+
+    if (j == 15){
+    printf("stepCounter old value %d ",stepCounter);
+      readDimValueFromTextFile();
+      printf("stepCounter new value %d ",stepCounter);
+    }
+
+  }
+
+  pthread_exit(NULL);
+}
+
+void *Remot5(void *threadid) {
+  long tid;
+  int j = 0;
+  tid = (long)threadid;
+  cout << "\nHello Remot 5 ! Thread ID, " << tid << endl;
+
+  for (j = 0 ; j< 20;j++){
+    stepCounter++;
+    printf("Remot 5 thread %d stepCounter %d \n", j, stepCounter);
+  }
+  pthread_exit(NULL);
+}
+
+
+void readDimValueFromTextFile(){
+
+   int num;
+   FILE *fptr;
+
+   if ((fptr = fopen("test.txt","r")) == NULL) {       // checks if file exists
+       puts("File not exists");
+       exit(1);                    // for exit(1) is required #include <stdlib.h>
+   } else{
+      fscanf(fptr,"%d", &num);
+      printf("Remote parameter is:  %d\n", num);
+      fclose(fptr);
+      printf("stepCounter is:  %d\n", stepCounter);
+      stepCounter = stepCounter+num;
+      printf("agter read from file stepCounter new value is:  %d\n", stepCounter);
+
+   }
+}
+
+int main () {
+  pthread_t threads[NUM_THREADS];
+  int processor, remot1, remot2,remot3,remot4,remot5;
+  int i;
+  int ret;
+
+  pthread_t processorThread;
+
+  struct sched_param  param;
+  pthread_attr_t thread_attr;
+  pthread_attr_init(&thread_attr);  // Initialise the attributes
+
+  //SCHED_FIFO is a simple scheduling algorithm without time slicing.
+  pthread_attr_setschedpolicy(&thread_attr, SCHED_FIFO);  // Set attributes to FIFO policy
+  param.sched_priority = 50;
+  std::cout << "Trying to set thread realtime prio = " << param.sched_priority << std::endl;
+
+  ret = pthread_attr_setschedparam(&thread_attr, &param); // Set attributes to priority 95
+
+  if (ret != 0) {
+    // Print the error
+    std::cout << "Unsuccessful in setting thread realtime prio" << std::endl;
+  } else{
+    std::cout << "Successful in setting thread realtime prio" << std::endl;
+  }
+
+
+  cout << "\nmain() : creating thread, Remot 1" << endl;
+  remot1 = pthread_create(&threads[1], NULL, Remot1, (void *)1);
+
+  cout << "\nmain() : creating thread, Remot2 " << endl;
+  remot2 = pthread_create(&threads[2], NULL, Remot2, (void *)2);
+
+  cout << "\nmain() : creating thread, Remot3 " << endl;
+  remot3 = pthread_create(&threads[3], NULL, Remot3, (void *)3);
+
+  cout << "\nmain() : creating thread, Remot4 " << endl;
+  remot4 = pthread_create( &threads[4], NULL, Remot4, (void *)4);
+
+  cout << "\nmain() : creating thread, Processor " << endl;
+  processor = pthread_create(&processorThread, &thread_attr, Processor, (void *)6);
+
+  if (processor != 0){
+    printf("\nprocessor thread create failed error");
+  } else{
+    printf("\nprocessor thread create success : ");
+  }
+
+  // Now verify the change in thread priority
+  int policy = 0;
+  ret = pthread_getschedparam(processorThread, &policy, &param);
+    if (ret != 0) {
+      std::cout << "Couldn't retrieve real-time scheduling paramers" << std::endl;
+    } else {
+      std::cout << "Retrieve real-time scheduling paramers success" << std::endl;
+    }
+  // Check the correct policy was applied
+  if(policy != SCHED_FIFO) {
+    std::cout << "\nScheduling is NOT SCHED_FIFO!\n" << std::endl;
+  } else {
+    std::cout << "\nSCHED_FIFO OK\n\n" << std::endl;
+  }
+
+  cout << "\nmain() : creating thread, Remot5 " << endl;
+  remot5 = pthread_create(&threads[5], NULL, Remot5, (void *)5);
+
+  pthread_exit(NULL);
+}
+
+// g++ -o a.out concurrentCmSCHED_RR.cpp && ./a.out
+//g++ -o a.out concurrentCmSCHED_RR.cpp -lpthread && ./a.out
+
+/****
+Kernels shipped since 2.6.25 have set the rt_bandwidth value for the default group to be 0.95 out of every 1.0 seconds.
+In other words, the group scheduler is configured, by default, to reserve 5% of the CPU for non-SCHED_FIFO tasks.
+SCHED_FIFO and SCHED_RR are so called "real-time" policies.
+SCHED_FIFO and SCHED_RR are so called "real-time" policies. They implement the fixed-priority real-time scheduling specified by the POSIX standard.
+Tasks with these policies preempt every other task, which can thus easily go into starvation (if they don't release the CPU).
+**/
+
+
+```
+
+### Voltage Regulator Shape
+```cpp
+#include<iostream>
+#include<cstdlib>
+#include<pthread.h>
+#include<sched.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+using namespace std;
+
+#define NUM_THREADS 6
+volatile int stepCounter = 0 ;
+
+void readDimValueFromTextFile(); 
+void *ProcessorMajorTask(void *threadid);
+void *Remote(void *threadid);
+
+void *ProcessorMajorTask(void *threadid) {
+  long tid;
+  int k = 0;
+  tid = (long)threadid;
+  cout << "Hello Processor! Thread ID, " << tid << endl;
+
+  for (k = 0 ; k< 20;k++){
+    stepCounter++;
+    printf("processor thread %d stepCounter %d \n", k, stepCounter);
+  }
+
+  pthread_exit(NULL);
+}
+
+void *Remote(void *threadid) {
+  long tid;
+  int j = 0;
+  tid = (long)threadid;
+  cout << "\nHello Remot 4 ! Thread ID, " << tid << endl;
+
+  for (j = 0 ; j< 20;j++){
+    stepCounter++;
+    printf("Remot 4 thread %d stepCounter %d \n", j, stepCounter);
+
+    if (j == 15){
+    printf("stepCounter old value %d ",stepCounter);
+      readDimValueFromTextFile();
+      printf("stepCounter new value %d ",stepCounter);
+    }
+  }
+  pthread_exit(NULL);
+}
+
+int main () {
+  pthread_t remoteThread;
+  pthread_t processorThread;
+  int processor, remoteFlag, ret;
+
+  /**start configuring processor thread with higher priority**/
+  struct sched_param  param;
+  pthread_attr_t thread_attr;
+  pthread_attr_init(&thread_attr);  // Initialise the attributes
+  //SCHED_FIFO is a simple scheduling algorithm without time slicing.
+  pthread_attr_setschedpolicy(&thread_attr, SCHED_FIFO);  // Set attributes to FIFO policy
+  param.sched_priority = 50;
+  std::cout << "Trying to set thread realtime prio = " << param.sched_priority << std::endl;
+
+  ret = pthread_attr_setschedparam(&thread_attr, &param); // Set attributes to priority 95
+
+  if (ret != 0) {
+    // Print the error
+    std::cout << "Unsuccessful in setting thread realtime prio" << std::endl;
+  } else{
+    std::cout << "Successful in setting thread realtime prio" << std::endl;
+  }
+
+  /* processor thread configuration end **/
+
+
+  cout << "\nmain() : creating remoteThread " << endl;
+  remoteFlag = pthread_create(&remoteThread, NULL, Remote, (void *)0);
+
+
+  cout << "\nmain() : creating processorThread " << endl;
+  processor = pthread_create(&processorThread, &thread_attr, ProcessorMajorTask, (void *)1);
+
+  if (processor != 0){
+    printf("\nprocessor thread create failed error");
+  } else{
+    printf("\nprocessor thread create success : ");
+  }
+
+  // Now verify the change in thread priority
+  int policy = 0;
+  ret = pthread_getschedparam(processorThread, &policy, &param);
+    if (ret != 0) {
+      std::cout << "Couldn't retrieve real-time scheduling paramers" << std::endl;
+    } else {
+      std::cout << "Retrieve real-time scheduling paramers success" << std::endl;
+    }
+  // Check the correct policy was applied
+  if(policy != SCHED_FIFO) {
+    std::cout << "\nScheduling is NOT SCHED_FIFO!\n" << std::endl;
+  } else {
+    std::cout << "\nSCHED_FIFO OK\n\n" << std::endl;
+  }
+
+
+  pthread_exit(NULL);
+}
+
+void readDimValueFromTextFile(){
+
+   int num;
+   FILE *fptr;
+
+   if ((fptr = fopen("test.txt","r")) == NULL) {       // checks if file exists
+       puts("File not exists");
+       exit(1);                    // for exit(1) is required #include <stdlib.h>
+   } else{
+      fscanf(fptr,"%d", &num);
+      printf("Remote parameter is:  %d\n", num);
+      fclose(fptr);
+      printf("stepCounter is:  %d\n", stepCounter);
+
+      if (stepCounter < 0){
+        stepCounter = 0;
+      } else if (stepCounter > 128){
+        stepCounter = 128;
+      } else{
+            stepCounter = stepCounter+num;
+      }
+      
+      printf("agter read from file stepCounter new value is:  %d\n", stepCounter);
+
+   }
+}
+
+// g++ -o a.out concurrentCmSCHED_RR.cpp && ./a.out
+//g++ -o a.out concurrentCmSCHED_RR.cpp -lpthread && ./a.out
+
+```
+
+```cpp
+
+
+```
+
+```cpp
+
+
+```
+
+
 
 ##### Interrupt 
->http://wiringpi.com/reference/priority-interrupts-and-threads/
->https://github.com/ngs/wiringPi/blob/master/examples/isr.c
->https://www.digikey.com/en/maker/blogs/2019/increase-your-knowledge-of-the-gpio-c-library
 
 # Interrupt
 
@@ -167,10 +746,6 @@ The edge type can be one of three different options:
 The example below shows a program that prints a message to the console when a switch connected to GPIO0 is pushed.
 
 
-
-
-
-
 ```cpp
 #include <iostream>     // Include all needed libraries here
 #include <wiringPi.h>
@@ -238,7 +813,28 @@ int main() {
 }
 ```
 
+```cpp
+#include <iostream>     // Include all needed libraries here
+#include <wiringPi.h>
 
+using namespace std;    // No need to keep using “std”
+
+int main() {
+   wiringPiSetup();        // Setup the library
+   pinMode(0, OUTPUT);     // Configure GPIO0 as an output
+
+   // Main program loop
+   while(1) {
+      // Toggle the LED
+         digitalWrite(0, !digitalRead(0));
+
+      // Delay for 500ms
+      delay(500);
+      //delayMicroseconds()
+   }
+   return 0;
+}
+```
 
 KEYWORD
 TIMER_RESET = 1
@@ -295,29 +891,29 @@ BIASED_DELAY = 19
 
 ```
 
- bcm2835_gpio_lev()
- 
- Reads the current level on the specified pin and returns either HIGH or LOW. Works whether or not the pin is an input or an output.
- 
- Parameters
- [in]	pin	GPIO number, or one of RPI_GPIO_P1_* from RPiGPIOPin.
- Returns
- the current level either HIGH or LOW
- 
- bcm2835_gpio_pud()
- void bcm2835_gpio_pud	(	uint8_t 	pud	)	
- Sets the Pull-up/down register for the given pin. This is used with bcm2835_gpio_pudclk() to set the Pull-up/down resistor for the given pin. 
- However, it is usually more convenient to use bcm2835_gpio_set_pud().
- 
- Parameters
- [in]	pud	The desired Pull-up/down mode. One of BCM2835_GPIO_PUD_* from bcm2835PUDControl On the RPI 4, although this 
- function and bcm2835_gpio_pudclk() are supported for backward compatibility, new code should always use bcm2835_gpio_set_pud().
- 
-  bcm2835_gpio_set_pud()
- void bcm2835_gpio_set_pud	(	uint8_t 	pin, uint8_t 	pud )		
- Sets the Pull-up/down mode for the specified pin. This is more convenient than clocking the mode in 
- with bcm2835_gpio_pud() and bcm2835_gpio_pudclk().
- 
- Parameters
- [in]	pin	GPIO number, or one of RPI_GPIO_P1_* from RPiGPIOPin.
- [in]	pud	The desired Pull-up/down mode. One of BCM2835_GPIO_PUD_* from bcm2835PUDControl
+     bcm2835_gpio_lev()
+     
+     Reads the current level on the specified pin and returns either HIGH or LOW. Works whether or not the pin is an input or an output.
+     
+     Parameters
+     [in]	pin	GPIO number, or one of RPI_GPIO_P1_* from RPiGPIOPin.
+     Returns
+     the current level either HIGH or LOW
+     
+     bcm2835_gpio_pud()
+     void bcm2835_gpio_pud	(	uint8_t 	pud	)	
+     Sets the Pull-up/down register for the given pin. This is used with bcm2835_gpio_pudclk() to set the Pull-up/down resistor for the given pin. 
+     However, it is usually more convenient to use bcm2835_gpio_set_pud().
+     
+     Parameters
+     [in]	pud	The desired Pull-up/down mode. One of BCM2835_GPIO_PUD_* from bcm2835PUDControl On the RPI 4, although this 
+     function and bcm2835_gpio_pudclk() are supported for backward compatibility, new code should always use bcm2835_gpio_set_pud().
+     
+      bcm2835_gpio_set_pud()
+     void bcm2835_gpio_set_pud	(	uint8_t 	pin, uint8_t 	pud )		
+     Sets the Pull-up/down mode for the specified pin. This is more convenient than clocking the mode in 
+     with bcm2835_gpio_pud() and bcm2835_gpio_pudclk().
+     
+     Parameters
+     [in]	pin	GPIO number, or one of RPI_GPIO_P1_* from RPiGPIOPin.
+     [in]	pud	The desired Pull-up/down mode. One of BCM2835_GPIO_PUD_* from bcm2835PUDControl

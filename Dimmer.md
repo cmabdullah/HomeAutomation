@@ -1,28 +1,6 @@
 
 
 ## 1 Channel Light Fan Dimmer Module
-> https://www.techshopbd.com/product-categories/modules/3427/1-channel-light-fan-dimmer-module-techshop-bangladesh
-
-> https://blog.techshopbd.com/2-channel-light-fan-dimmer-module-%e0%a6%95%e0%a6%bf%e0%a6%ad%e0%a6%be%e0%a6%ac%e0%a7%87-%e0%a6%ac%e0%a7%8d%e0%a6%af%e0%a6%ac%e0%a6%b9%e0%a6%be%e0%a6%b0-%e0%a6%95%e0%a6%b0%e0%a6%ac%e0%a7%8b/
-
-> https://playground.arduino.cc/Code/Timer1/
-
-> https://www.arduino.cc/reference/en/language/functions/external-interrupts/attachinterrupt/
->
-
->https://playground.arduino.cc/Main/ACPhaseControl/
->
->https://www.raspberrypi.org/forums/viewtopic.php?t=148936
->
->https://github.com/PaulStoffregen/TimerOne
->
->https://playground.arduino.cc/Main/ACPhaseControl/
->
->http://esp8266-projects.org/2017/04/raspberry-pi-domoticz-ac-dimmer-part-1/
->
->https://playground.arduino.cc/Code/Timer1/
->
->https://raspberrypi.stackexchange.com/questions/8808/zero-crossing-activated-relay
 
 ```cpp
 #include <TimerOne.h>  // Avaiable from http://www.arduino.cc/playground/Code/Timer1
