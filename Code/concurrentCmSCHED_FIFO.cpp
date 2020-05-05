@@ -12,7 +12,7 @@ using namespace std;
 #define NUM_THREADS 6
 volatile int stepCounter = 0;
 
-void readDimValueFromTextFile(); 
+void readDimValueFromTextFile(void); 
 void *Processor(void *threadid);
 void *Remot1(void *threadid);
 void *Remot2(void *threadid);
@@ -108,7 +108,7 @@ void *Remot5(void *threadid) {
 }
 
 
-void readDimValueFromTextFile(){
+void readDimValueFromTextFile(void){
 
    int num;
    FILE *fptr;

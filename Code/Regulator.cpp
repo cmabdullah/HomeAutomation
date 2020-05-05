@@ -56,8 +56,6 @@ void *Remote(void *threadid) {
   tid = (long)threadid;
   cout << "\nHello Remot ! Thread ID, " << tid << endl;
 
-
-
   for (;;) {
     printf ("Waiting ... ");
     delay(1000);//1000ms
@@ -72,12 +70,12 @@ void *Remote(void *threadid) {
       fclose(fptr);
       printf("stepCounter is:  %d\n", stepCounter);
 
-      if (stepCounter < 0){
-        stepCounter = 0;
-      } else if (stepCounter > 128){
-        stepCounter = 128;
+      if (dim < 0){
+        dim = 0;
+      } else if (dim > 128){
+        dim = 128;
       } else{
-            stepCounter = stepCounter+num;
+            dim = dim+num;
       }
       printf("agter read from file stepCounter new value is:  %d\n", stepCounter);
    }

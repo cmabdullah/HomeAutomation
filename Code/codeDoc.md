@@ -12,6 +12,10 @@
 
 > https://github.com/ngs/wiringPi/blob/master/examples/isr.c
 
+> https://forum.pycom.io/topic/2659/ac-dimming-with-zero-crossing
+
+> http://nanpy.github.io
+
 > https://www.techshopbd.com/product-categories/modules/3427/1-channel-light-fan-dimmer-module-techshop-bangladesh
 
 > https://playground.arduino.cc/Code/Timer1/
@@ -35,6 +39,8 @@
 > https://www.techshopbd.com/product-categories/modules/3427/1-channel-light-fan-dimmer-module-techshop-bangladesh
 
 > https://blog.techshopbd.com/2-channel-light-fan-dimmer-module-%e0%a6%95%e0%a6%bf%e0%a6%ad%e0%a6%be%e0%a6%ac%e0%a7%87-%e0%a6%ac%e0%a7%8d%e0%a6%af%e0%a6%ac%e0%a6%b9%e0%a6%be%e0%a6%b0-%e0%a6%95%e0%a6%b0%e0%a6%ac%e0%a7%8b/
+
+> https://www.quora.com/If-an-AC-current-changes-its-direction-each-half-cycle-then-how-does-it-travel-through-wires-Did-I-miss-something
 
 Ulog64
 > https://raspberrypi.stackexchange.com/questions/8808/zero-crossing-activated-relay
@@ -891,6 +897,21 @@ BIASED_DELAY = 19
 
 ```
 
+#### If an AC current changes its direction each half cycle, then how does it travel through wires? Did I miss something?
+
+Here’s my favorite way to describe it: Think of a piston in a reciprocating engine going up and down as the crankshaft is turning beneath it. 
+Every stroke the piston rises to the top of the cylinder and comes to a complete stop before moving downward. When the piston reaches the bottom of its stroke, 
+the piston comes to a complete stop again before moving upward. Meanwhile, the crankshaft is turning round and round delivering power to the transmission. 
+If you plotted the position of the piston over time, the plot would be a sine wave.
+AC current does something similar. The voltage starts at a complete stop from zero volts, rises positively to a maximum, 
+begins to fall, reaches zero volts and comes to a complete stop, passes zero becoming more negative until it reaches a minimum and 
+then rises back to zero volts again to complete one cycle. Meanwhile, power is being delivered to the load. If you plot the voltage over time, 
+the plot will be a sine wave. I prefer to think of AC power as rotating rather than alternating. AC conductors are basically very long, 
+flexible drive shafts being turned by a distant generator. You can carry the rotating shaft analogy out quite a ways. 
+See Harry Olson’s 1943 book Dynamical Analogies at archive.orgThree phase power? Think of an old biplane radial engine with three cylinders. 
+The cylinders will be spaced 120 degrees apart with each piston in a different position as the crank is turning. Plot the 
+positions of all three pistons over time and the plot will look like three sine waves, 120 degrees out of phase with each other.
+  
      bcm2835_gpio_lev()
      
      Reads the current level on the specified pin and returns either HIGH or LOW. Works whether or not the pin is an input or an output.
