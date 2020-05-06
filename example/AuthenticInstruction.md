@@ -10,13 +10,13 @@ For that a zero crossing detector is necessary. This is a circuit that tells the
 the sinus wave goes through zero and therefore gives a defined point on that sinus wave.
 Opening the Triac for a number of microseconds after the zero crossing therefore gives a predictable level of dimming.
 
-![alt text](images/0-crossing_thumb1.jpg "An example of  a zero cross detection circuit")
+![alt text](../images/0-crossing_thumb1.jpg "An example of  a zero cross detection circuit")
 
 Such a circuit is easy to build: The zero crossing is directly derived from the rectified mains AC lines – via an optocoupler 
 of course- and gives a signal every time the wave goes through zero. Because the sine wave first goes through double phased rectification (see figure below), 
 the zero-crossing signal is given regardless whether the sinus wave goes up through zero or down through zero. This signal then can be used to steer an interrupt in the
 
-![alt text](images/sine_thumb.gif "")
+![alt text](../images/sine_thumb.gif "")
 
 Opening the Triac is done via a tried and tested opto coupled Triac circuit. For the Triac a TIC206 can be used, 
 but a BT136 (a bit cheaper)  would probably work as well. With regard to the MOC3021: 
@@ -30,7 +30,7 @@ The 1/2 Watt should do it as the resistors dissipate some 400mW. If you think th
 Be careful though in using sensitive optocouplers as the 4N32 as they will easily be fully in saturation.
 
 
-![alt text](images/dimmer2_thumb.jpg "This is the complete circuit of the dimmer")
+![alt text](../images/dimmer2_thumb.jpg "This is the complete circuit of the dimmer")
 
 All one needs then is the software. Below a piece of demo software. Due to use of ‘delay()’ it does not work efficiently meaning that the microcontroller can’t do much else, but if you just want to dim a light that is fine.
 
@@ -209,16 +209,16 @@ void loop(){
 ```
 
 
-![alt-text](images/0-crossing_thumb1.jpg "PCB Layout")
+![alt-text](../images/0-crossing_thumb1.jpg "PCB Layout")
 # Your task is to modify source code and write your own way
 
-![alt-text](images/dimmer-p1040650_thumb.jpg "")
+![alt-text](../images/dimmer-p1040650_thumb.jpg "")
 
 On thing to consider is that if you are building a system in which you are not using a ready made PSU but rather supply your own PSU, 
 built from a transformer and a rectifier, you could consider picking up the 0-crossing from the secondary side of the transformer.
 
 A possible circuit could look like this
-![alt-text](images/voedingbig_thumb.jpg "")
+![alt-text](../images/voedingbig_thumb.jpg "")
 
 **Using the dimmer with a fan**
 A question I often get is if this circuit can be used with a (ceiling)fan. Well a Triac is not particularly good at regulating 
