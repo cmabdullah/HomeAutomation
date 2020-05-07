@@ -8,7 +8,9 @@
 #include <arpa/inet.h> // defines in_addr structure
 #include <sys/socket.h> // for socket creation
 #include <netinet/in.h> //contains constants and structures needed for internet domain addresses
- 
+#include <iostream> // For cout
+////https://www.thecrazyprogrammer.com/2017/06/socket-programming.html
+ using namespace std;
 int main()
 {
     time_t clock;
@@ -23,16 +25,30 @@ int main()
 	ipOfServer.sin_port = htons(2017); 		// this is the port number of running server
 	bind(clintListn, (struct sockaddr*)&ipOfServer , sizeof(ipOfServer));
 	listen(clintListn , 20);
- 
+
+int n = 0, k,connfd = 0;
+  char recvBuff[1024];
+
+
+
+
 	while(1)
 	{
 		printf("\n\nHi,Iam running server.Some Client hit me\n"); // whenever a request from client came. It will be processed here.
 		clintConnt = accept(clintListn, (struct sockaddr*)NULL, NULL);
- 
+
+  // Read from the connection
+    char buffer[100];
+    auto bytesRead = read(clintConnt, buffer, 100);
+    cout << "The message was: " << buffer << endl;
+    memset(buffer, 0, sizeof buffer);
+
 		clock = time(NULL);
 		snprintf(dataSending, sizeof(dataSending), "%.24s\r\n", ctime(&clock)); // Printing successful message
 		write(clintConnt, dataSending, strlen(dataSending));
- 
+
+
+
         close(clintConnt);
         sleep(1);
      }

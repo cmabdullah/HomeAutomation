@@ -1,3 +1,515 @@
+### Read write gpio pin
+```cpp
+#include<stdio.h>
+#include<wiringPi.h>
+
+#define led 4
+#define button 17
+
+void cleanup(){
+    digitalWrite(led, 0);
+}
+
+int main(void){
+    wiringPiSetupGpio();
+
+    pinMode(led, OUTPUT);// delivery output from mpu
+    pinMode(button, INPUT);//get input from i/o
+
+    delay(1000);//delay just to be safe
+
+    for(;;){
+        delay(10);//10 millisecond delay
+        if(digitalRead(button) == 1){
+            digitalWrite(led,1);
+        }else{
+            digitalWrite(led,0);
+        }
+    }
+    //cleanup();
+}
+```
+
+### DELAY
+
+VOID DELAY (UNSIGNED INT HOWLONG) AND VOID DELAYMICROSECONDS (UNSIGNED INT HOWLONG)
+
+These two functions are used for delays and the delay() function was used in the previous. 
+The delay() function takes a number and will delay for that many milliseconds. The delayMicroseconds() function does the same, 
+except it delays for that many microseconds.
+
+Now, for the main loop. I'm using a switch input for "user request" but you can use network, timer or whatever. 
+All you need is to get the boolean value into in.
+
+```cpp
+#include <iostream>     // Include all needed libraries here
+#include <wiringPi.h>
+
+using namespace std;    // No need to keep using “std”
+
+int main() {
+   wiringPiSetup();        // Setup the library
+   pinMode(0, OUTPUT);     // Configure GPIO0 as an output
+
+   // Main program loop
+   while(1) {
+      // Toggle the LED
+         digitalWrite(0, !digitalRead(0));
+
+      // Delay for 500ms
+      delay(500);
+      //delayMicroseconds()
+   }
+   return 0;
+}
+```
+
+### Interrupt
+
+> int wiringPiISR (int pin, int edgeType,  void (*function)(void)) ;
+
+This function registers a function to received interrupts on the specified pin. 
+The edgeType parameter is either **INT_EDGE_FALLING**, **INT_EDGE_RISING**, **INT_EDGE_BOTH** or **INT_EDGE_SETUP**. 
+the pin elsewhere (e.g. with the gpio program), but if you specify one of the other types, 
+then the pin will be exported and initialised as specified. This is accomplished via a suitable call to the gpio utility program, 
+so it need to be available. The pin number is supplied in the current mode – native wiringPi, BCM_GPIO, physical or Sys modes.
+
+This function will work in any mode, and d**oes not need root privileges** to work.
+
+The function will be called when the interrupt triggers. When it is triggered, it’s cleared in the dispatcher before calling your function, 
+so if a subsequent interrupt fires before you finish your handler, then it won’t be missed. (However it can only track one more interrupt, 
+if more than one interrupt fires while one is being handled then they will be ignored)
+
+**_This function is run at a high priority_** (if the program is run using sudo, or as root) and **executes concurrently with the main program**. 
+It has full access to all the global variables, open file handles and so on.
+The edge type can be one of three different options:
+
+1. INT_EDGE_FALLING – Interrupt when the input goes from 1 to 0
+2. INT_EDGE_RISING – Interrupt when the input goes from 0 to 1
+3. INT_EDGE_BOTH – Interrupt when the input changes
+
+```cpp
+#include <iostream>     // Include all needed libraries here
+#include <wiringPi.h>
+
+using namespace std;    // No need to keep using “std”
+
+void switchInterrupt(void);   // Function prototype
+
+int main() {
+   wiringPiSetup();        // Setup the library
+   pinMode(0, OUTPUT);     // Configure GPIO0 as an output
+   pinMode(1, INPUT);      // Configure GPIO1 as an input
+
+   // Cause an interrupt when switch is pressed (0V)
+   wiringPiISR (1, INT_EDGE_FALLING, switchInterrupt) ;
+
+   // Main program loop
+   while(1){
+      // Toggle the LED
+      digitalWrite(0, !digitalRead(0));
+      delay(500);
+   }
+
+   return 0;
+}
+
+// Our interrupt routine
+void switchInterrupt(void) {
+   cout << “Button pressed” << endl;
+}
+```
+
+### Concurrency with posix api
+
+Kernels shipped since 2.6.25 have set the rt_bandwidth value for the default group to be 0.95 out of every 1.0 seconds.
+In other words, the group scheduler is configured, by default, to reserve 5% of the CPU for non-SCHED_FIFO tasks.
+SCHED_FIFO and SCHED_RR are so called "real-time" policies.
+SCHED_FIFO and SCHED_RR are so called "real-time" policies. They implement the fixed-priority real-time scheduling specified by the POSIX standard.
+Tasks with these policies preempt every other task, which can thus easily go into starvation (if they don't release the CPU).
+
+```cpp
+#include<iostream>
+#include<cstdlib>
+#include<pthread.h>
+#include<sched.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+using namespace std;
+
+#define NUM_THREADS 6
+volatile int stepCounter = 0 ;
+
+void readDimValueFromTextFile(); 
+void *ProcessorMajorTask(void *threadid);
+void *Remote(void *threadid);
+
+void *ProcessorMajorTask(void *threadid) {
+  long tid;
+  int k = 0;
+  tid = (long)threadid;
+  cout << "Hello Processor! Thread ID, " << tid << endl;
+
+  for (k = 0 ; k< 20;k++){
+    stepCounter++;
+    printf("processor thread %d stepCounter %d \n", k, stepCounter);
+  }
+
+  pthread_exit(NULL);
+}
+
+void *Remote(void *threadid) {
+  long tid;
+  int j = 0;
+  tid = (long)threadid;
+  cout << "\nHello Remot 4 ! Thread ID, " << tid << endl;
+
+  for (j = 0 ; j< 20;j++){
+    stepCounter++;
+    printf("Remot 4 thread %d stepCounter %d \n", j, stepCounter);
+
+    if (j == 15){
+    printf("stepCounter old value %d ",stepCounter);
+      readDimValueFromTextFile();
+      printf("stepCounter new value %d ",stepCounter);
+    }
+  }
+  pthread_exit(NULL);
+}
+
+int main () {
+  pthread_t remoteThread;
+  pthread_t processorThread;
+  int processor, remoteFlag, ret;
+
+  /**start configuring processor thread with higher priority**/
+  struct sched_param  param;
+  pthread_attr_t thread_attr;
+  pthread_attr_init(&thread_attr);  // Initialise the attributes
+  //SCHED_FIFO is a simple scheduling algorithm without time slicing.
+  pthread_attr_setschedpolicy(&thread_attr, SCHED_FIFO);  // Set attributes to FIFO policy
+  param.sched_priority = 50;
+  std::cout << "Trying to set thread realtime prio = " << param.sched_priority << std::endl;
+
+  ret = pthread_attr_setschedparam(&thread_attr, &param); // Set attributes to priority 95
+
+  if (ret != 0) {
+    // Print the error
+    std::cout << "Unsuccessful in setting thread realtime prio" << std::endl;
+  } else{
+    std::cout << "Successful in setting thread realtime prio" << std::endl;
+  }
+
+  /* processor thread configuration end **/
+
+
+  cout << "\nmain() : creating remoteThread " << endl;
+  remoteFlag = pthread_create(&remoteThread, NULL, Remote, (void *)0);
+
+
+  cout << "\nmain() : creating processorThread " << endl;
+  processor = pthread_create(&processorThread, &thread_attr, ProcessorMajorTask, (void *)1);
+
+  if (processor != 0){
+    printf("\nprocessor thread create failed error");
+  } else{
+    printf("\nprocessor thread create success : ");
+  }
+
+  // Now verify the change in thread priority
+  int policy = 0;
+  ret = pthread_getschedparam(processorThread, &policy, &param);
+    if (ret != 0) {
+      std::cout << "Couldn't retrieve real-time scheduling paramers" << std::endl;
+    } else {
+      std::cout << "Retrieve real-time scheduling paramers success" << std::endl;
+    }
+  // Check the correct policy was applied
+  if(policy != SCHED_FIFO) {
+    std::cout << "\nScheduling is NOT SCHED_FIFO!\n" << std::endl;
+  } else {
+    std::cout << "\nSCHED_FIFO OK\n\n" << std::endl;
+  }
+
+
+  pthread_exit(NULL);
+}
+
+void readDimValueFromTextFile(){
+
+   int num;
+   FILE *fptr;
+
+   if ((fptr = fopen("test.txt","r")) == NULL) {       // checks if file exists
+       puts("File not exists");
+       exit(1);                    // for exit(1) is required #include <stdlib.h>
+   } else{
+      fscanf(fptr,"%d", &num);
+      printf("Remote parameter is:  %d\n", num);
+      fclose(fptr);
+      printf("stepCounter is:  %d\n", stepCounter);
+
+      if (stepCounter < 0){
+        stepCounter = 0;
+      } else if (stepCounter > 128){
+        stepCounter = 128;
+      } else{
+            stepCounter = stepCounter+num;
+      }
+      
+      printf("agter read from file stepCounter new value is:  %d\n", stepCounter);
+
+   }
+}
+
+// g++ -o a.out concurrentCmSCHED_RR.cpp && ./a.out
+//g++ -o a.out concurrentCmSCHED_RR.cpp -lpthread && ./a.out
+```
+
+### Socket accept request
+```cpp
+#include <stdio.h> // standard input and output library
+#include <stdlib.h> // this includes functions regarding memory allocation
+#include <string.h> // contains string functions
+#include <errno.h> //It defines macros for reporting and retrieving error conditions through error codes
+#include <time.h> //contains various functions for manipulating date and time
+#include <unistd.h> //contains various constants
+#include <sys/types.h> //contains a number of basic derived types that should be used whenever appropriate
+#include <arpa/inet.h> // defines in_addr structure
+#include <sys/socket.h> // for socket creation
+#include <netinet/in.h> //contains constants and structures needed for internet domain addresses
+#include <iostream> // For cout
+////https://www.thecrazyprogrammer.com/2017/06/socket-programming.html
+ using namespace std;
+int main()
+{
+    time_t clock;
+	char dataSending[1025]; // Actually this is called packet in Network Communication, which contain data and send through.
+	int clintListn = 0, clintConnt = 0;
+	struct sockaddr_in ipOfServer;
+	clintListn = socket(AF_INET, SOCK_STREAM, 0); // creating socket
+	memset(&ipOfServer, '0', sizeof(ipOfServer));
+	memset(dataSending, '0', sizeof(dataSending));
+	ipOfServer.sin_family = AF_INET;
+	ipOfServer.sin_addr.s_addr = htonl(INADDR_ANY);
+	ipOfServer.sin_port = htons(2017); 		// this is the port number of running server
+	bind(clintListn, (struct sockaddr*)&ipOfServer , sizeof(ipOfServer));
+	listen(clintListn , 20);
+
+int n = 0, k,connfd = 0;
+  char recvBuff[1024];
+
+
+
+
+	while(1)
+	{
+		printf("\n\nHi,Iam running server.Some Client hit me\n"); // whenever a request from client came. It will be processed here.
+		clintConnt = accept(clintListn, (struct sockaddr*)NULL, NULL);
+
+  // Read from the connection
+    char buffer[100];
+    auto bytesRead = read(clintConnt, buffer, 100);
+    cout << "The message was: " << buffer << endl;
+    memset(buffer, 0, sizeof buffer);
+
+		clock = time(NULL);
+		snprintf(dataSending, sizeof(dataSending), "%.24s\r\n", ctime(&clock)); // Printing successful message
+		write(clintConnt, dataSending, strlen(dataSending));
+
+
+
+        close(clintConnt);
+        sleep(1);
+     }
+ 
+     return 0;
+}
+```
+
+### send get request like rest
+```cpp
+#include <iostream>
+#include <string>
+#include <curl/curl.h>
+#include <boost/algorithm/string.hpp>
+#include <string>
+#include <stdio.h>
+using namespace std;
+//https://stackoverflow.com/questions/2329571/c-libcurl-get-output-into-a-string
+//https://stackoverflow.com/questions/2329571/c-libcurl-get-output-into-a-string
+size_t CurlWrite_CallbackFunc_StdString(void *contents, size_t size, size_t nmemb, string *s)
+{
+    size_t newLength = size*nmemb;
+    try
+    {
+        s->append((char*)contents, newLength);
+
+    }
+    catch(bad_alloc &e)
+    {
+        //handle memory problem
+        return 0;
+    }
+    return newLength;
+}
+int main()
+{
+    CURL *curl;
+    CURLcode res;
+
+    curl_global_init(CURL_GLOBAL_DEFAULT);
+
+    curl = curl_easy_init();
+    string s;
+    if(curl)
+    {
+
+        curl_easy_setopt(curl, CURLOPT_URL, "http://localhost:8080/socket/");
+
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L); //only for https
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L); //only for https
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, CurlWrite_CallbackFunc_StdString);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &s);
+        curl_easy_setopt (curl, CURLOPT_VERBOSE, 1L); //remove this to disable verbose output
+
+
+        /* Perform the request, res will get the return code */
+        res = curl_easy_perform(curl);
+        /* Check for errors */
+        if(res != CURLE_OK)
+        {
+            fprintf(stderr, "curl_easy_perform() failed: %s\n",
+                    curl_easy_strerror(res));
+        }
+
+        /* always cleanup */
+        curl_easy_cleanup(curl);
+    }
+
+    //cout<<"result is : "<< s<<endl;
+
+
+
+
+
+    try{
+
+    int convertToInt = stoi(s);
+
+    cout<<"result is : "<< convertToInt <<endl;
+
+    }catch(invalid_argument const &e){
+        cout<< "Bad input: std:invalid_argument thrown"<< endl;
+    }catch(out_of_range const &e){
+        cout<< "Invalid overflow: std::out_of_range  thrown"<< endl;
+    }
+
+
+
+
+    //cout<< "Program finished!" << endl;
+}
+
+
+```
+
+### Voltage regulator Pseudo Code
+
+```cpp
+/*
+ * isr.c:
+ * Wait for Interrupt test program - ISR method
+ to do make it parallel
+ read dim value
+ */
+#include<iostream>
+#include<cstdlib>
+#include<stdio.h>
+#include<string.h>
+#include<errno.h>
+#include<stdlib.h>
+#include<wiringPi.h>
+#include<pthread.h>
+#include<sched.h>
+
+using namespace std;
+
+// What GPIO input are we using?
+// This is a wiringPi pin number
+#define FAN_PIN 3   // Output to Opto Triac
+#define INTERRUPT_PIN 2 //#define directive allows the definition of macros within your source code
+#define FREQ_STEP 75   // This is the delay-per-brightness step in microseconds.
+
+#define PIN_HIGH 1 //1 == HIGH
+#define PIN_LOW 0 //2 == LOW
+
+volatile boolean zeroCross=0;
+// Boolean to store a "switch" to tell us if we have crossed zero
+volatile int stepCounter = 0;  
+// Should be declared volatile to make sure the compiler doesn't cache it.
+
+int dim = 128;  // Dimming level (0-128)  0 = on, 128 = 0ff
+int pas = 14;   // step for count;
+
+void zeroCrossDetect(void) {    
+  zeroCross = true; // set the boolean to true to tell our dimming function that a zero cross has occured
+  stepCounter=0;
+  digitalWrite(FAN_PIN, PIN_LOW); // // turn off fan
+}    
+
+// Turn on the TRIAC at the appropriate time
+void dimCheck(void) {                   
+  if(zeroCross == true) {              
+    if(stepCounter>=dim) {                     
+      digitalWrite(FAN_PIN, PIN_HIGH);  // turn on fan       
+      stepCounter = 0;  // reset time step counter                         
+      zeroCross=false;    // reset zero cross detection
+    } else {
+      stepCounter++;  // increment time step counter                     
+    }                                
+  }    
+}  
+
+void setDimMethod(void){
+    dim = 64;
+}
+
+int main (void){
+
+  if (wiringPiSetup () < 0) {
+    fprintf (stderr, "Unable to setup wiringPi: %s\n", strerror (errno)) ;
+    return 1 ;
+  }
+
+  pinMode(FAN_PIN, OUTPUT);  // Set the Triac pin as output
+
+  if (wiringPiISR (INTERRUPT_PIN, INT_EDGE_RISING, &zeroCrossDetect) < 0) {
+    fprintf (stderr, "Unable to setup ISR: %s\n", strerror (errno)) ;
+    return 1 ;
+  }
+
+  setDimMethod();
+
+  for (;;) {
+
+    printf ("Waiting ... ");
+
+    delayMicroseconds(FREQ_STEP);
+
+    dimCheck();
+    fflush (stdout) ;
+
+    printf ("dimCheck called -> \n") ;
+
+  }
+  return 0 ;
+}
+```
+
+
+
 #  [Dimmer-Arduino](https://arduinodiy.wordpress.com/category/dimmer/ "Dimmer-Arduino")
 Switching an AC load with an Arduino is rather simple: either a mechanical Relay or a solid state relay with an optically isolated Triac.
 It becomes a bit more tricky if one wants to dim a mains AC lamp with an arduino: just limiting the current through a 

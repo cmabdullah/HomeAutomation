@@ -1,14 +1,14 @@
-APPNAME = Ulong64Program
+APPNAME = VoltageRegulatorFinalShape
 CXXFLAGS =	-O2 -g -Wall -fmessage-length=0
 
 OBJS =		${APPNAME}.o
 
-LIBS = -lrt
-ifeq "$(APPNAME)" "Ulong64Program"
+ifeq "$(APPNAME)" "VoltageRegulatorFinalShape"
+LDFLAGS = -lcurl -lpthread
 CFLAGS += -D__APPLE__
 endif  
 $(APPNAME):	$(OBJS)
-	g++ -o $(APPNAME) $(OBJS) $(LIBS)
+	g++ -o $(APPNAME) $(OBJS)  $(LDFLAGS)
 	./$(APPNAME)
 
 all:	$(APPNAME)
