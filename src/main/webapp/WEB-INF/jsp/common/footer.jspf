@@ -1,11 +1,78 @@
 <script src="webjars/jquery/1.9.1/jquery.min.js"></script>
 <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script
-	src="webjars/bootstrap-datepicker/1.0.1/js/bootstrap-datepicker.js"></script>
+        src="webjars/bootstrap-datepicker/1.0.1/js/bootstrap-datepicker.js"></script>
+<%--<script src="webjars/mdbootstrap-bootstrap-material-design/4.8.8/js/bootstrap.min.js"></script>--%>
+
+<%--<script src="webjars/bootstrap/4.1.3/js/bootstrap.js"></script>--%>
+<%--<script src="webjars/bootstrap/4.1.3/js/bootstrap.min.js"></script>--%>
+
+<script src="webjars/bootstrap4-toggle/3.6.0/js/bootstrap4-toggle.min.js"></script>
+
 <script>
-	$('#targetDate').datepicker({
-		format : 'dd/mm/yyyy'
-	});
+    $('#targetDate').datepicker({
+        format: 'dd/mm/yyyy'
+    });
+
+
+
+
+    $("#light1").on("click", s1);
+
+    function s1() {
+
+        var id = $('#light1').val();
+        if (light1.checked === true) {
+            var i = 1;
+            $('#l1').val(i);
+        } else {
+            var j = 0;
+            $('#l1').val(j);
+        }
+        //console.log(id);
+    }
+
+    $("#fan").on("click", s2);
+
+    function s2() {
+
+        var id = $('#fan').val();
+        if (fan.checked === true) {
+            var i = 1;
+            $('#f1').val(i);
+        } else {
+            var j = 0;
+            $('#f1').val(j);
+        }
+        //console.log(id);
+    }
+
+
+
+
+
+    $("#regulatorParam").on("change", sum);
+
+    function sum() {
+        const id = $('#regulatorParam').val();
+        console.log(id);
+
+        $('#sp1').val(id);
+
+        $.ajax({
+            type: 'POST',
+            url: '/remove/?arr=' + id,
+            success: function () {
+                //location.reload();
+                //$valueSpan.html($value.val());
+            },
+            error: function (res) {
+                console.log(res);
+                location.reload();
+            }
+        });
+    }
+
 </script>
 
 </body>

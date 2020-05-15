@@ -1,9 +1,6 @@
-package com.abdullah.home.automation.controller;
+package com.abdullah.home.automation.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,20 +10,10 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-
-@Controller
-public class TestController {
-
-    @ResponseBody
-    @GetMapping("/socket")
-    public String socket(){
-        return "10";
-    }
-
-    @ResponseBody
-    @GetMapping("/socket2")
-    public String socket2(){
-
+@Service
+public class RegulatorServiceImpl implements RegulatorService{
+    @Override
+    public int postSocketRequest(int regulatorParam) {
 
         String result = "";
         try {
@@ -34,7 +21,7 @@ public class TestController {
             System.out.println(serverAddress.getHostAddress());
             Socket socket = new Socket(serverAddress , 2017);
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            out.println("30");
+            out.println(regulatorParam);
             BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             result = input.readLine();
             System.out.println(input.readLine());
@@ -52,6 +39,6 @@ public class TestController {
         }catch(Exception e) {
             System.out.println(e.toString());
         }
-        return result;
+        return 0;
     }
 }
