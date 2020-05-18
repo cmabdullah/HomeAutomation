@@ -7,10 +7,11 @@
 *.ipr
 *.out
 *.json
+*.DS_Store
 !/.idea
 /.idea/*
 */**/.idea
-
+/indexes/*
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar

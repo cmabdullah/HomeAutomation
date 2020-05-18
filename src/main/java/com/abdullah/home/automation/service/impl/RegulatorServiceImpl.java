@@ -1,5 +1,6 @@
-package com.abdullah.home.automation.service;
+package com.abdullah.home.automation.service.impl;
 
+import com.abdullah.home.automation.service.RegulatorService;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -11,7 +12,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 @Service
-public class RegulatorServiceImpl implements RegulatorService{
+public class RegulatorServiceImpl implements RegulatorService {
     @Override
     public int postSocketRequest(int regulatorParam) {
 

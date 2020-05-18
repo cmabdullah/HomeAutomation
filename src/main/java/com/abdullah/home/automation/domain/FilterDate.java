@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 public class FilterDate {
 	private Date targetDate;
 	private String namePath;
+	private String payloadType;
 }

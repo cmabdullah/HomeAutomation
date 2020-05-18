@@ -10,7 +10,7 @@
             <div class="form-group row">
                 <label for="light1" class="col-sm-4 col-form-label">Light</label>
                 <div class="col-sm-8">
-                    <input type="checkbox"  data-size="lg" id="light1" >
+                    <input type="checkbox"  data-size="lg" id="light1" class="switch" >
                 </div>
             </div>
 
@@ -19,7 +19,7 @@
             <div class="form-group row">
                 <label for="fan" class="col-sm-4 col-form-label">Fan</label>
                 <div class="col-sm-8">
-                    <input type="checkbox"  data-size="lg" id="fan" >
+                    <input type="checkbox"  data-size="lg" id="fan" class="switch">
                 </div>
             </div>
         <input type="text" name="" id="f1" readonly>
@@ -46,7 +46,6 @@
                        id="regulatorParam" min="0" max="100"/>
             </div>
         </div>
-
         <input type="text" id="sp1" />
 
 

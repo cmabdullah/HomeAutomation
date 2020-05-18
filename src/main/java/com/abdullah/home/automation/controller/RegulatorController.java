@@ -10,8 +10,13 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class RegulatorController {
 
+
+    private final RegulatorService regulatorService;
+
     @Autowired
-    private RegulatorService regulatorService;
+    RegulatorController(RegulatorService regulatorService){
+        this.regulatorService = regulatorService;
+    }
 
     @GetMapping("/regulator")
     public String regulatorGet(ModelMap modelMap) {
@@ -35,13 +40,10 @@ public class RegulatorController {
 
     @ResponseBody
     @RequestMapping(value="/remove", method= RequestMethod.POST)
-    public String remove(@RequestParam(value = "arr") String[] tdValues) {
+    public String remove(@RequestParam(value = "arr") String tdValues) {
 
-        for (String id :tdValues ) {
-            System.out.println("id : "+ id);
-        }
-
-        System.out.println("size : "+ tdValues.length);
+        System.out.println("id : "+ tdValues);
+        System.out.println("size : "+ tdValues.length());
 
         //System.out.println("Id "+ tdValues.toString());
 

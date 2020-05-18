@@ -1,22 +1,30 @@
-<%@ include file="common/header.jspf"%>
-<%@ include file="common/navigation.jspf"%>
+<%@ include file="common/header.jspf" %>
+<%@ include file="common/navigation.jspf" %>
 <div class="container">
+    <div class="row">
+        <form:form method="post" modelAttribute="filterDate" action="/remote">
 
-	<form:form method="post" modelAttribute="filterDate" action="/remote">
+            <form:select path="namePath">
 
-	<form:select  path="namePath">
-    <form:option value="NONE"> --SELECT--</form:option>
-    <form:options items="${stations}"></form:options>
-  </form:select>
+                <form:option value="NONE"> --SELECT--</form:option>
+                <form:options items="${stations}"></form:options>
+            </form:select>
 
-		<fieldset class="form-group">
-			<form:label path="targetDate">Target Date</form:label>
-			<form:input path="targetDate" type="text" class="form-control"
-				required="required" />
-			<form:errors path="targetDate" cssClass="text-warning" />
-		</fieldset>
+            <form:select path="payloadType">
+                <form:option value="NONE"> --SELECT--</form:option>
+                <form:options items="${payloadTypes}"></form:options>
+            </form:select>
 
-		<button type="submit" class="btn btn-success">Add</button>
-	</form:form>
+            <fieldset class="form-group row">
+                <form:label path="targetDate">Target Date</form:label>
+                <form:input path="targetDate" type="text" class="form-control"
+                            required="required"/>
+                <form:errors path="targetDate" cssClass="text-warning"/>
+            </fieldset>
+
+            <button type="submit" class="btn btn-success">Add</button>
+        </form:form>
+    </div>
 </div>
-<%@ include file="common/footer.jspf"%>
+
+<%@ include file="common/footer.jspf" %>

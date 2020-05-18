@@ -1,14 +1,15 @@
-package com.abdullah.home.automation.service;
+package com.abdullah.home.automation.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.abdullah.home.automation.domain.Payload2;
 import com.abdullah.home.automation.domain.WeatherData;
+import com.abdullah.home.automation.service.PayloadService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PayloadServiceImpl implements PayloadService{
+public class PayloadServiceImpl implements PayloadService {
 
 	@Override
 	public List<Payload2> buildPayloadFromList(List<WeatherData> weatherDataSet, String payloadType) {
@@ -17,8 +18,7 @@ public class PayloadServiceImpl implements PayloadService{
 		for(int i = 0 ; i< 24 ; i++) {
 			payload2List.add(new Payload2());
 		}
-		
-		
+
 		for (WeatherData wd : weatherDataSet) {
 
 			if (wd.getTime().contains("00:00:00")) {

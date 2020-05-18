@@ -1,6 +1,8 @@
-package com.abdullah.home.automation.service;
+package com.abdullah.home.automation.service.impl;
 
 import com.abdullah.home.automation.domain.*;
+import com.abdullah.home.automation.service.PayloadService;
+import com.abdullah.home.automation.service.WeatherService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,7 @@ import java.util.stream.Stream;
 public class WeatherServiceImpl implements WeatherService {
 
 
-    private static PayloadService payloadService;
+    private final PayloadService payloadService;
 
     @Autowired
     WeatherServiceImpl(PayloadService payloadService){

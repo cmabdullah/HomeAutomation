@@ -7,10 +7,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @Slf4j
 @SpringBootApplication
-public class ChartVisualisationApplication implements CommandLineRunner {
+public class HomeAutomationApplication implements CommandLineRunner {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ChartVisualisationApplication.class, args);
+		SpringApplication.run(HomeAutomationApplication.class, args);
 	}
 
 	@Override

@@ -15,41 +15,83 @@
     });
 
 
+    $("#light1").on("click", lightJs);
 
+    function lightJs() {
 
-    $("#light1").on("click", s1);
-
-    function s1() {
-
-        var id = $('#light1').val();
+        let i;
         if (light1.checked === true) {
-            var i = 1;
+            i = 1;
+            const  id = $('#l1').val(i);
+            console.log("light on : "+ i);
+
+            var switchInfo = {}
+            switchInfo["switchName"] = "light1";
+            switchInfo["switchState"] = "on";
+            switchInfo["switchType"] = "logical";
+            console.log("stringify : "+ JSON.stringify(switchInfo))
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                url: "/lightRest",
+                data: JSON.stringify(switchInfo),
+
+                dataType: 'json',
+                cache: false,
+                timeout: 600000,
+                success: function (data) {
+                    console.log("success : ", data);
+                },
+                error: function (e) {
+                    console.log("ERROR : ", e);
+                }
+            });
+
+        } else {
+            i = 0;
             $('#l1').val(i);
-        } else {
-            var j = 0;
-            $('#l1').val(j);
+            console.log("light off : "+ i);
+
+            var switchInfo = {}
+            switchInfo["switchName"] = "light1";
+            switchInfo["switchState"] = "off";
+            switchInfo["switchType"] = "logical";
+            console.log("stringify : "+ JSON.stringify(switchInfo))
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                url: "/lightRest",
+                data: JSON.stringify(switchInfo),
+
+                dataType: 'json',
+                cache: false,
+                timeout: 600000,
+                success: function (data) {
+                    console.log("success : ", data);
+                },
+                error: function (e) {
+                    console.log("ERROR : ", e);
+                }
+            });
         }
-        //console.log(id);
     }
 
-    $("#fan").on("click", s2);
+    $("#fan").on("click", fanJs);
 
-    function s2() {
+    function fanJs() {
 
-        var id = $('#fan').val();
+        let j;
         if (fan.checked === true) {
-            var i = 1;
-            $('#f1').val(i);
-        } else {
-            var j = 0;
+            j = 1;
             $('#f1').val(j);
+            console.log("fan on : "+ j);
+        } else {
+            j = 0;
+            $('#f1').val(j);
+            console.log("fan off : "+ j);
         }
         //console.log(id);
     }
-
-
-
-
 
     $("#regulatorParam").on("change", sum);
 
@@ -59,7 +101,29 @@
 
         $('#sp1').val(id);
 
+
+        var regulatorDto = {}
+        regulatorDto["regulatorParam"] = id;
         $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: "/regulatorRest",
+            data: JSON.stringify(regulatorDto),
+            dataType: 'json',
+            cache: false,
+            timeout: 600000,
+            success: function (data) {
+                console.log("success : ", data);
+            },
+            error: function (e) {
+                console.log("ERROR : ", e);
+            }
+        });
+    }
+
+    /**
+     *
+     * $.ajax({
             type: 'POST',
             url: '/remove/?arr=' + id,
             success: function () {
@@ -71,8 +135,20 @@
                 location.reload();
             }
         });
-    }
+     *
+     * **/
 
+    $(document).ready(function() {
+
+        $("#selectAllBooks").click(function() {
+            console.log("test");
+            if($(this).prop("checked")==true) {
+                $(".checkboxBook").click();
+            } else if ($(this).prop("checked")==false) {
+                $(".checkboxBook").prop("checked",false);
+            }
+        })
+    });
 </script>
 
 </body>

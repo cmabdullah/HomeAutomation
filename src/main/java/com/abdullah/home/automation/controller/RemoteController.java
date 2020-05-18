@@ -9,6 +9,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.abdullah.home.automation.domain.Payload2;
+import com.abdullah.home.automation.service.FavoriteService;
 import com.abdullah.home.automation.service.WeatherService;
 import com.abdullah.home.automation.domain.FilterDate;
 import lombok.extern.slf4j.Slf4j;
@@ -31,9 +32,12 @@ public class RemoteController {
 
     private final WeatherService weatherService;
 
+    private final FavoriteService favoriteService;
+
     @Autowired
-    RemoteController( WeatherService weatherService){
+    RemoteController( WeatherService weatherService,FavoriteService favoriteService){
         this.weatherService = weatherService;
+        this.favoriteService = favoriteService;
     }
 
     List<String> payloadTypes = List.of("humidity", "temperature", "pressure", "winddirection", "windspeed", "precipitation", "dewpoint");
@@ -70,8 +74,12 @@ public class RemoteController {
     @RequestMapping(value = "/remote", method = RequestMethod.GET)
     String remoteGet(ModelMap modelMap) {
         modelMap.addAttribute("filterDate", new FilterDate());
-        List<String> stations = List.of("41923\tBD\tDhaka\tAsia/Dhaka", "47662\tJP\tTokyo\tAsia/Tokyo");
+
+        favoriteService.getFavoriteStations();
+        List<String> stations = favoriteService.getFavoriteStations();
+                //List.of("41923\tBD\tDhaka\tAsia/Dhaka", "47662\tJP\tTokyo\tAsia/Tokyo");
         modelMap.addAttribute("stations", stations);
+        modelMap.addAttribute("payloadTypes", payloadTypes);
 
         return "remote";
     }
@@ -81,6 +89,10 @@ public class RemoteController {
     String remotePost(ModelMap modelMap, @Valid FilterDate filterDate, BindingResult result) {
         log.info("Ui Data : " + filterDate.toString());
 
+        if (result.hasErrors()) {
+            return "remote";
+        }
+
         LocalDate targetDate = dateValidation(
                 filterDate.getTargetDate().toInstant()
                         .atZone(ZoneId.systemDefault()).toLocalDate());
@@ -89,7 +101,16 @@ public class RemoteController {
 
         log.info("targetDate " + targetDate + " firstDayOfMonth " + firstDayOfMonth);
 
-        String payloadType = payloadTypes.get(0);
+        String payloadType = "";
+
+        if (filterDate.getPayloadType() !=null){
+            if (payloadTypes.contains(filterDate.getPayloadType())){
+                payloadType = filterDate.getPayloadType();
+            }else{
+                payloadType = payloadTypes.get(0);
+            }
+        }
+
         List<Payload2> payload2List = weatherService.postWeatherRequest(filterDate, targetDate, firstDayOfMonth, payloadType);
         log.info("payload size "+ payload2List.size());
         // 2019-04-
