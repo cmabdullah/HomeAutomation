@@ -33,7 +33,7 @@
             $.ajax({
                 type: "POST",
                 contentType: "application/json",
-                url: "/lightRest",
+                url: "/logicalSwitchRest",
                 data: JSON.stringify(switchInfo),
 
                 dataType: 'json',
@@ -60,7 +60,7 @@
             $.ajax({
                 type: "POST",
                 contentType: "application/json",
-                url: "/lightRest",
+                url: "/logicalSwitchRest",
                 data: JSON.stringify(switchInfo),
 
                 dataType: 'json',
@@ -103,8 +103,33 @@
 
 
         var regulatorDto = {}
-        regulatorDto["regulatorParam"] = id;
+        regulatorDto["switchName"] = "fan1";
+        regulatorDto["voltageRange"] = id;
+        console.log("stringify : "+ JSON.stringify(regulatorDto))
         $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: "/regulatorRest",
+            data: JSON.stringify(regulatorDto),
+
+            dataType: 'json',
+            cache: false,
+            timeout: 600000,
+            success: function (data) {
+                console.log("success : ", data);
+            },
+            error: function (e) {
+                console.log("ERROR : ", e);
+            }
+        });
+
+
+
+
+    }
+    /*****
+     *
+     *         $.ajax({
             type: "POST",
             contentType: "application/json",
             url: "/regulatorRest",
@@ -119,7 +144,8 @@
                 console.log("ERROR : ", e);
             }
         });
-    }
+     *
+     * **/
 
     /**
      *

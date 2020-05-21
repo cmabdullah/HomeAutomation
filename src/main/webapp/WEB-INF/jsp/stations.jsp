@@ -15,7 +15,7 @@
             </tr>
             </thead>
             <tbody>
-            <c:forEach items="${stationList }" var="station">
+            <c:forEach items="${stationsResponseDto.stationList }" var="station">
             <tr >
 
                 <td>
@@ -28,9 +28,13 @@
                 <td >${station.stationName}</td>
                 <td >${station.state}</td>
 
+                <c:if test="${stationsResponseDto.add == true}">
+                    <td><a type="button" class="btn btn-success" href="/favorite?id=${station.id}">Add</a></td>
+                </c:if>
 
-                <td><a type="button" class="btn btn-success" href="/favorite?id=${station.id}">Add</a></td>
+                <c:if test="${stationsResponseDto.delete == true}">
                 <td><a type="button" class="btn btn-warning" href="/delFavorite?id=${station.id}">Delete</a></td>
+                </c:if>
 <%--                <td>--%>
 <%--                    <input hidden="hidden" name="id" ${station.id} />--%>
 <%--                    <button id="${station.id}" class="btn btn-danger btn-xs delete-book" type="submit" value="delete" >--%>

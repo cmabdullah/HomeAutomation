@@ -1,53 +1,44 @@
 package com.abdullah.home.automation.registry.impl;
 
-import com.abdullah.home.automation.constants.Constant;
 import com.abdullah.home.automation.constants.enums.SwitchName;
-import com.abdullah.home.automation.constants.enums.SwitchState;
 import com.abdullah.home.automation.constants.enums.SwitchType;
+import com.abdullah.home.automation.domain.model.Switch;
 import com.abdullah.home.automation.dto.SwitchInfo;
+import com.abdullah.home.automation.registry.DBSwitchRegistry;
 import com.abdullah.home.automation.registry.LogicalSwitchRegistry;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
+@Slf4j
 @Service
 public class LogicalSwitchRegistryImpl implements LogicalSwitchRegistry {
 
-    static SwitchInfo logicalSwitchInfo = new SwitchInfo();
+    private final DBSwitchRegistry dBSwitchRegistry;
+
+    @Autowired
+    public LogicalSwitchRegistryImpl(DBSwitchRegistry dBSwitchRegistry) {
+        this.dBSwitchRegistry = dBSwitchRegistry;
+    }
 
     @Override
     public SwitchInfo getLogicalSwitchInfo(SwitchName switchName) {
-        System.out.println("getLogicalSwitchInfo method called ");
-        //provide information from network
-        logicalSwitchInfo.setSwitchName(SwitchName.LIGHT_1);
-        logicalSwitchInfo.setSwitchType(SwitchType.PHYSICAL);
 
-        if (Constant.LOGICAL_SWITCH == 1 ){
-            logicalSwitchInfo.setSwitchState(SwitchState.ON);
-        }else{
-            logicalSwitchInfo.setSwitchState(SwitchState.OFF);
-        }
+        return dBSwitchRegistry.getPhysicalOrLogicalSwitchInfo(switchName, SwitchType.LOGICAL);
 
-        return logicalSwitchInfo;
     }
 
     @Override
-    public void offLogicalSwitch(SwitchInfo logicalSwitchInfo) {
-        System.out.println("logical switch off ");
-        logicalSwitchInfo.setSwitchName(SwitchName.LIGHT_1);
-        logicalSwitchInfo.setSwitchType(SwitchType.PHYSICAL);
-        logicalSwitchInfo.setSwitchState(SwitchState.OFF);
+    public Switch offLogicalSwitch(SwitchInfo logicalSwitchInfo, Switch switchInfo) {
 
-        //dummy
-        Constant.LOGICAL_SWITCH = 0;
+        return dBSwitchRegistry.switchOnOff(logicalSwitchInfo, 0, switchInfo);
     }
 
     @Override
-    public void onLogicalSwitch(SwitchInfo logicalSwitchInfo) {
-        System.out.println("logical switch on ");
-        logicalSwitchInfo.setSwitchName(SwitchName.LIGHT_1);
-        logicalSwitchInfo.setSwitchType(SwitchType.PHYSICAL);
-        logicalSwitchInfo.setSwitchState(SwitchState.ON);
+    public Switch onLogicalSwitch(SwitchInfo logicalSwitchInfo, Switch switchInfo) {
 
-        //dummy
-        Constant.LOGICAL_SWITCH = 1;
+        return dBSwitchRegistry.switchOnOff(logicalSwitchInfo, 1, switchInfo);
+
     }
 }

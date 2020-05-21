@@ -6,7 +6,8 @@ public enum SwitchType {
 
     UNDEFINED("undefined"),
     PHYSICAL("physical"),
-    LOGICAL("logical");
+    LOGICAL("logical"),
+    PI("pi");
 
     private String value;
 
@@ -28,6 +29,7 @@ public enum SwitchType {
         switch (value){
             case "physical" : return PHYSICAL;
             case "logical" : return LOGICAL;
+            case "pi" : return PI;
             default: return UNDEFINED;
         }
     }

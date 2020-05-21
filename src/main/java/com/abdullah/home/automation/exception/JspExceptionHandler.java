@@ -1,4 +1,4 @@
-package com.abdullah.home.automation.controller;
+package com.abdullah.home.automation.exception;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -9,7 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Slf4j
 @Controller("error")
-public class ExceptionController {
+public class JspExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ModelAndView handleError(HttpServletRequest req, Exception ex) {

@@ -2,7 +2,7 @@
 <%@ include file="common/navigation.jspf"%>
 <div class="container">
   
-	<form:form method="post" modelAttribute="filterDate" action="/staticFind">
+	<form:form method="post" modelAttribute="filterDto" action="/staticFind">
 
 	<form:select  path="namePath">
     <form:option value="NONE"> --SELECT--</form:option>

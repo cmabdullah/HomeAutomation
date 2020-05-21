@@ -2,6 +2,7 @@ package com.abdullah.home.automation.service.impl;
 
 import com.abdullah.home.automation.domain.StationsDto;
 import com.abdullah.home.automation.domain.model.Station;
+import com.abdullah.home.automation.dto.response.StationsResponseDto;
 import com.abdullah.home.automation.repository.StationRepository;
 import com.abdullah.home.automation.service.StationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,7 +26,10 @@ public class StationServiceImpl implements StationService {
         this.stationRepository = stationRepository;
     }
 
-    public List<StationsDto> stationList() throws IOException {
+    public List<StationsDto> migrateStationInfo() throws IOException {
+
+        //delete all info first
+        stationRepository.deleteAll();
 
         List<StationsDto> stationDtoList = Files.readAllLines(Paths.get("stations.csv"))
                 .stream().map(line -> {
@@ -67,11 +70,16 @@ public class StationServiceImpl implements StationService {
     }
 
 
-    public List<Station> findStations(String keyword) {
+    public StationsResponseDto findStations(String keyword) {
 
-        List<Station> list = stationRepository.findByStationNameContaining(keyword);
-        //list.forEach(n -> System.out.println(n));
-        return list;
+        List<Station> stations = stationRepository.findByStationNameContaining(keyword);
+
+        StationsResponseDto stationsResponseDto = new StationsResponseDto();
+        stationsResponseDto.setStationList(stations);
+        stationsResponseDto.setDelete(false);
+        stationsResponseDto.setAdd(true);
+        stationsResponseDto.setStationSearch(true);
+        return stationsResponseDto;
 
     }
 
@@ -81,5 +89,7 @@ public class StationServiceImpl implements StationService {
 
         return stationRepository.findById(stationId);
     }
+
+
 
 }

@@ -13,7 +13,6 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @Data
 @Entity
-
 public class Station {
 
     @Id

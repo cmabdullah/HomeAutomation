@@ -17,7 +17,7 @@
 					<li><a href="/remote">Dynamic Data</a></li>
 				</ul>
 			</li>
-
+			<c:if test="${stationsResponseDto.stationSearch == true}">
 			<li>
 				<form class="navbar-form" action="stations"  method="post">
 					<div class="form-group">
@@ -26,8 +26,8 @@
 					</div>
 					<button type="submit" class="btn btn-default">Search</button>
 				</form>
-
 			</li>
+			</c:if>
 		</ul>
 
 <!-- 		<ul class="nav navbar-nav navbar-right"> -->

@@ -1,53 +1,45 @@
 package com.abdullah.home.automation.registry.impl;
 
-import com.abdullah.home.automation.constants.Constant;
 import com.abdullah.home.automation.constants.enums.SwitchName;
-import com.abdullah.home.automation.constants.enums.SwitchState;
 import com.abdullah.home.automation.constants.enums.SwitchType;
+import com.abdullah.home.automation.domain.model.Switch;
 import com.abdullah.home.automation.dto.SwitchInfo;
+import com.abdullah.home.automation.registry.DBSwitchRegistry;
 import com.abdullah.home.automation.registry.PhysicalSwitchRegistry;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class PhysicalSwitchRegistryImpl implements PhysicalSwitchRegistry {
 
-    static SwitchInfo physicalSwitchInfo = new SwitchInfo();
+    private final DBSwitchRegistry dBSwitchRegistry;
+
+    @Autowired
+    PhysicalSwitchRegistryImpl(DBSwitchRegistry dBSwitchRegistry) {
+        this.dBSwitchRegistry = dBSwitchRegistry;
+    }
+
+
     @Override
     public SwitchInfo getPhysicalSwitchInfo(SwitchName switchName) {
-        System.out.println("getPhysicalSwitchInfo called ");
 
-        //provide information from hardware
-        physicalSwitchInfo.setSwitchName(SwitchName.LIGHT_1);
-        physicalSwitchInfo.setSwitchType(SwitchType.PHYSICAL);
+        return dBSwitchRegistry.getPhysicalOrLogicalSwitchInfo(switchName, SwitchType.PHYSICAL);
 
-        if (Constant.PHYSICAL_SWITCH == 1 ){
-            physicalSwitchInfo.setSwitchState(SwitchState.ON);
-        }else{
-            physicalSwitchInfo.setSwitchState(SwitchState.OFF);
-        }
-
-        return physicalSwitchInfo;
     }
 
     @Override
-    public void offPhysicalSwitch(SwitchInfo physicalSwitchInfo) {
-        System.out.println("physical switch off ");
-        physicalSwitchInfo.setSwitchName(SwitchName.LIGHT_1);
-        physicalSwitchInfo.setSwitchType(SwitchType.PHYSICAL);
-        physicalSwitchInfo.setSwitchState(SwitchState.OFF);
+    public Switch offPhysicalSwitch(SwitchInfo physicalSwitchInfo, Switch switchInfo) {
 
-        //dummy
-        Constant.PHYSICAL_SWITCH = 0;
+        return dBSwitchRegistry.switchOnOff(physicalSwitchInfo, 0, switchInfo);
+
     }
 
     @Override
-    public void onPhysicalSwitch(SwitchInfo physicalSwitchInfo) {
-        System.out.println("physical switch on ");
-        physicalSwitchInfo.setSwitchName(SwitchName.LIGHT_1);
-        physicalSwitchInfo.setSwitchType(SwitchType.PHYSICAL);
-        physicalSwitchInfo.setSwitchState(SwitchState.ON);
+    public Switch onPhysicalSwitch(SwitchInfo physicalSwitchInfo, Switch switchInfo) {
 
-        //dummy
-        Constant.PHYSICAL_SWITCH = 1;
+        return dBSwitchRegistry.switchOnOff(physicalSwitchInfo, 1, switchInfo);
+
     }
 }

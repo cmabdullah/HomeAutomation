@@ -2,17 +2,17 @@
 <%@ include file="common/navigation.jspf" %>
 <div class="container">
     <div class="row">
-        <form:form method="post" modelAttribute="filterDate" action="/remote">
+        <form:form method="post" modelAttribute="filterDto" action="/remote">
 
             <form:select path="namePath">
 
                 <form:option value="NONE"> --SELECT--</form:option>
-                <form:options items="${stations}"></form:options>
+                <form:options items="${stationInfoDto.stations}"></form:options>
             </form:select>
 
             <form:select path="payloadType">
                 <form:option value="NONE"> --SELECT--</form:option>
-                <form:options items="${payloadTypes}"></form:options>
+                <form:options items="${stationInfoDto.payloadTypes}"></form:options>
             </form:select>
 
             <fieldset class="form-group row">

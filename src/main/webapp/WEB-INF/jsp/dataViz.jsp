@@ -11,7 +11,7 @@
 
 <body>
 <div id="container">
-    <c:out value="${filterDate}">Date</c:out>
+
 </div>
 <script type="text/javascript">
 
@@ -61,9 +61,9 @@
 
 //             <c:forEach items="${pieDataList}" var="entry">
 //                  [ '${entry.month}', ${entry.tokyo}, ${entry.newYork} ],
-//              </c:forEach>   
+//              </c:forEach>
 
-            <c:forEach items="${payload2list}" var="entry">
+            <c:forEach items="${weatherResponseDto.payload2List}" var="entry">
             ['${entry.hourName}', ${entry.d1}, ${entry.d2}, ${entry.d3}, ${entry.d4}, ${entry.d5}, ${entry.d6},
 				${entry.d7}, ${entry.d8}, ${entry.d9}, ${entry.d10}, ${entry.d11}, ${entry.d12}, ${entry.d13},
 				${entry.d14}, ${entry.d15}, ${entry.d16}, ${entry.d17}, ${entry.d18}, ${entry.d19}, ${entry.d20},
@@ -73,9 +73,9 @@
 
         ]);
 
-        var fd = "${filtarDate}";
+        var fd = "${weatherResponseDto.filtarDate}";
 
-        var payloadType = "${payloadType}";
+        var payloadType = "${weatherResponseDto.payloadType}";
 
         // Set chart options
         var options = {

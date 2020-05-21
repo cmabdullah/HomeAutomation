@@ -1,17 +1,15 @@
 package com.abdullah.home.automation.controller;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Date;
-import java.util.List;
 
 import javax.validation.Valid;
 
-import com.abdullah.home.automation.domain.Payload2;
+import com.abdullah.home.automation.dto.response.StationInfoDto;
+import com.abdullah.home.automation.dto.response.WeatherResponseDto;
 import com.abdullah.home.automation.service.FavoriteService;
 import com.abdullah.home.automation.service.WeatherService;
-import com.abdullah.home.automation.domain.FilterDate;
+import com.abdullah.home.automation.dto.request.FilterDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -19,12 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
-import static java.time.temporal.TemporalAdjusters.firstDayOfMonth;
-import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Controller
@@ -35,12 +28,10 @@ public class RemoteController {
     private final FavoriteService favoriteService;
 
     @Autowired
-    RemoteController( WeatherService weatherService,FavoriteService favoriteService){
+    RemoteController(WeatherService weatherService, FavoriteService favoriteService) {
         this.weatherService = weatherService;
         this.favoriteService = favoriteService;
     }
-
-    List<String> payloadTypes = List.of("humidity", "temperature", "pressure", "winddirection", "windspeed", "precipitation", "dewpoint");
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -49,130 +40,47 @@ public class RemoteController {
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
     }
 
-    @RequestMapping(value = "/weather", method = RequestMethod.GET)
+    @GetMapping("/weather")
     String weatherGet(ModelMap modelMap) {
-
-        LocalDate targetDate = dateValidation(LocalDate.now());
-        LocalDate firstDayOfMonth = targetDate.with(firstDayOfMonth());
-        log.info("targetDate " + targetDate + " firstDayOfMonth " + firstDayOfMonth);
-
-        String payloadType = payloadTypes.get(0);
-        FilterDate filterDate = new FilterDate();
-        filterDate.setNamePath("41923\tBD\tDhaka\tAsia/Dhaka");
-
-        List<Payload2> payload2List = weatherService.postWeatherRequest(filterDate, targetDate, firstDayOfMonth, payloadType);
-        log.info("payload size "+ payload2List.size());
-        // 2019-04-
-        String filterPartialDate = targetDate.toString().substring(0, 7);
-        modelMap.addAttribute("filtarDate", filterPartialDate);
-        modelMap.addAttribute("payloadType", payloadType);
-        modelMap.addAttribute("payload2list", payload2List);
-
+        WeatherResponseDto weatherResponseDto = weatherService.postWeatherRequest();
+        modelMap.addAttribute("weatherResponseDto", weatherResponseDto);
         return "dataViz";
     }
 
-    @RequestMapping(value = "/remote", method = RequestMethod.GET)
+    @GetMapping("/remote")
     String remoteGet(ModelMap modelMap) {
-        modelMap.addAttribute("filterDate", new FilterDate());
 
-        favoriteService.getFavoriteStations();
-        List<String> stations = favoriteService.getFavoriteStations();
-                //List.of("41923\tBD\tDhaka\tAsia/Dhaka", "47662\tJP\tTokyo\tAsia/Tokyo");
-        modelMap.addAttribute("stations", stations);
-        modelMap.addAttribute("payloadTypes", payloadTypes);
+        StationInfoDto stationInfoDto = favoriteService.getFavoriteStations();
+        modelMap.addAttribute("filterDto", new FilterDto());
+        modelMap.addAttribute("stationInfoDto", stationInfoDto);
 
         return "remote";
     }
 
-    //ModelMap modelMap, @Valid FilterDate filterDate, BindingResult result
-    @RequestMapping(value = "/remote", method = RequestMethod.POST)
-    String remotePost(ModelMap modelMap, @Valid FilterDate filterDate, BindingResult result) {
-        log.info("Ui Data : " + filterDate.toString());
-
-        if (result.hasErrors()) {
-            return "remote";
-        }
-
-        LocalDate targetDate = dateValidation(
-                filterDate.getTargetDate().toInstant()
-                        .atZone(ZoneId.systemDefault()).toLocalDate());
-
-        LocalDate firstDayOfMonth = targetDate.with(firstDayOfMonth());
-
-        log.info("targetDate " + targetDate + " firstDayOfMonth " + firstDayOfMonth);
-
-        String payloadType = "";
-
-        if (filterDate.getPayloadType() !=null){
-            if (payloadTypes.contains(filterDate.getPayloadType())){
-                payloadType = filterDate.getPayloadType();
-            }else{
-                payloadType = payloadTypes.get(0);
-            }
-        }
-
-        List<Payload2> payload2List = weatherService.postWeatherRequest(filterDate, targetDate, firstDayOfMonth, payloadType);
-        log.info("payload size "+ payload2List.size());
-        // 2019-04-
-        String filtarDate = targetDate.toString().substring(0, 7);
-        modelMap.addAttribute("filtarDate", filtarDate);
-        modelMap.addAttribute("payloadType", payloadType);
-        modelMap.addAttribute("payload2list", payload2List);
-
+    @PostMapping("/remote")
+    String remotePost(ModelMap modelMap, @Valid FilterDto filterDto, BindingResult result) {
+//        if (result.hasErrors()) {
+//            return "redirect:/remote";
+//        }
+        WeatherResponseDto weatherResponseDto = weatherService.postWeatherRequest(filterDto);
+        modelMap.addAttribute("weatherResponseDto", weatherResponseDto);
         return "dataViz";
     }
 
-    private LocalDate dateValidation(LocalDate targetDateFromDto) {
-
-        LocalDate today = LocalDate.now();
-        LocalDate targetDate = targetDateFromDto;
-        boolean dateValidation = today.isAfter(targetDateFromDto);//today is after targetDate
-        if (!dateValidation) { //if input date greater then today
-            targetDate = LocalDate.now();
-        }
-
-        if (dateValidation) {
-            LocalDate end = targetDate.with(lastDayOfMonth());
-            boolean todayIsAfterEnd = today.isAfter(end);//today is after end
-            if (todayIsAfterEnd) {
-                targetDate = targetDate.with(lastDayOfMonth());
-            }
-        }
-
-        return targetDate;
-
-    }
-
-    @RequestMapping("/staticFind")
-        //@ResponseBody
+    @GetMapping("/staticFind")
     String acceptDate(ModelMap modelMap) {
-        modelMap.addAttribute("filterDate", new FilterDate());
+        modelMap.addAttribute("filterDto", new FilterDto());
         modelMap.addAttribute("pathList", weatherService.pathList());
         return "staticFind";
     }
 
-    @RequestMapping(value = "/staticFind", method = RequestMethod.POST)
-    String hello(ModelMap modelMap, @Valid FilterDate filterDate, BindingResult result) {
-
-        LocalDate targetDate = dateValidation(
-                filterDate.getTargetDate().toInstant()
-                        .atZone(ZoneId.systemDefault()).toLocalDate());
-
-        LocalDate firstDayOfMonth = targetDate.with(firstDayOfMonth());
-
-        log.info("targetDate " + targetDate + " firstDayOfMonth " + firstDayOfMonth);
-
-        String payloadType = payloadTypes.get(0);
-
-        List<Payload2> payload2List = weatherService.processStaticData(filterDate, targetDate, firstDayOfMonth, payloadType);
-
-        log.info("payload size "+ payload2List.size());
-        // 2019-04-
-        String filtarDate = targetDate.toString().substring(0, 7);
-        modelMap.addAttribute("filtarDate", filtarDate);
-        modelMap.addAttribute("payloadType", payloadType);
-        modelMap.addAttribute("payload2list", payload2List);
-
+    @PostMapping("/staticFind")
+    String hello(ModelMap modelMap, @Valid FilterDto filterDto, BindingResult result) {
+        if (result.hasErrors()) {
+            return "redirect:/staticFind";
+        }
+        WeatherResponseDto weatherResponseDto = weatherService.processStaticData(filterDto);
+        modelMap.addAttribute("weatherResponseDto", weatherResponseDto);
         return "dataViz";
     }
 }
