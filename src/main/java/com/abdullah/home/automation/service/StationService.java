@@ -1,7 +1,7 @@
 package com.abdullah.home.automation.service;
 
-import com.abdullah.home.automation.domain.StationsDto;
-import com.abdullah.home.automation.domain.model.Station;
+import com.abdullah.home.automation.dto.request.StationsDto;
+import com.abdullah.home.automation.domain.Station;
 import com.abdullah.home.automation.dto.response.StationsResponseDto;
 
 import java.io.IOException;
@@ -14,5 +14,7 @@ public interface StationService {
 
     StationsResponseDto findStations(String keyword);
 
-    Optional<Station> findById(Long stationId);
+    Optional<Station> findById(Long id);
+
+    Optional<Station> findByStationId(String stationId);
 }

@@ -1,5 +1,6 @@
 package com.abdullah.home.automation.utlity;
 
+import com.abdullah.home.automation.exception.ApiError;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -19,9 +20,7 @@ public class Util {
             return OBJECT_MAPPER_DEEP_COPY.readValue(OBJECT_MAPPER_DEEP_COPY.writeValueAsString(o), o.getClass());
         }catch (IOException e){
             System.out.println(e.getMessage());
-            //throw new Exception("parse error : " +e.getMessage());
-
-            return null;//will handle later
+            throw new ApiError("object parse error : "+e.getMessage() , HttpStatus.BAD_REQUEST);
         }
 
 

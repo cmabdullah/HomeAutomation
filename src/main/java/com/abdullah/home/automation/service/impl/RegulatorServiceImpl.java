@@ -1,7 +1,7 @@
 package com.abdullah.home.automation.service.impl;
 
-import com.abdullah.home.automation.domain.model.Switch;
-import com.abdullah.home.automation.dto.RegulatorDto;
+import com.abdullah.home.automation.domain.Switch;
+import com.abdullah.home.automation.dto.request.RegulatorDto;
 import com.abdullah.home.automation.exception.ApiError;
 import com.abdullah.home.automation.exception.ApiMessage;
 import com.abdullah.home.automation.registry.SwitchCentralRegistry;
@@ -18,7 +18,6 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.Optional;
 
 @Service
 public class RegulatorServiceImpl implements RegulatorService {

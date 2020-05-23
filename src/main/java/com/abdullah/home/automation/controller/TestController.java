@@ -1,14 +1,15 @@
 package com.abdullah.home.automation.controller;
 
-import com.abdullah.home.automation.domain.StationsDto;
-import com.abdullah.home.automation.domain.model.Switch;
+import com.abdullah.home.automation.domain.WeatherEntity;
+import com.abdullah.home.automation.dto.request.StationsDto;
+import com.abdullah.home.automation.domain.Switch;
 import com.abdullah.home.automation.exception.ApiError;
 import com.abdullah.home.automation.service.StationService;
 import com.abdullah.home.automation.service.SwitchService;
+import com.abdullah.home.automation.service.WeatherEntityService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.BufferedReader;
@@ -26,11 +27,14 @@ public class TestController {
 
     private final StationService stationService;
     private final SwitchService switchService;
+    private final WeatherEntityService weatherEntityService;
 
     public TestController(StationService stationService,
-                   SwitchService switchService){
+                   SwitchService switchService,
+                          WeatherEntityService weatherEntityService){
         this.stationService = stationService;
         this.switchService = switchService;
+        this.weatherEntityService = weatherEntityService;
     }
 
     @ResponseBody
@@ -44,6 +48,13 @@ public class TestController {
     @GetMapping("/switchDataMig")
     public String switchDataMigration() {
         List<Switch> list = switchService.migrateSwitchInfo();
+        return "done";
+    }
+
+    @ResponseBody
+    @GetMapping("/weatherEntityDataMig")
+    public String weatherEntityMigration() {
+        List<WeatherEntity> list = weatherEntityService.migrateWeatherEntity();
         return "done";
     }
 

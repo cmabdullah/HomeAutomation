@@ -1,4 +1,4 @@
-package com.abdullah.home.automation.domain.model;
+package com.abdullah.home.automation.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

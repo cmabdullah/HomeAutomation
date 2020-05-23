@@ -1,7 +1,7 @@
 package com.abdullah.home.automation.registry.impl;
 
-import com.abdullah.home.automation.domain.model.Switch;
-import com.abdullah.home.automation.dto.SwitchInfo;
+import com.abdullah.home.automation.domain.Switch;
+import com.abdullah.home.automation.dto.request.SwitchInfo;
 import com.abdullah.home.automation.registry.DBSwitchRegistry;
 import com.abdullah.home.automation.registry.PiSwitchRegistry;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
 package com.abdullah.home.automation.repository;
 
-import com.abdullah.home.automation.domain.model.Switch;
+import com.abdullah.home.automation.domain.Switch;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;

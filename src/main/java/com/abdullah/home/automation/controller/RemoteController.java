@@ -59,9 +59,9 @@ public class RemoteController {
 
     @PostMapping("/remote")
     String remotePost(ModelMap modelMap, @Valid FilterDto filterDto, BindingResult result) {
-//        if (result.hasErrors()) {
-//            return "redirect:/remote";
-//        }
+        if (result.hasErrors()) {
+            return "redirect:/remote";
+        }
         WeatherResponseDto weatherResponseDto = weatherService.postWeatherRequest(filterDto);
         modelMap.addAttribute("weatherResponseDto", weatherResponseDto);
         return "dataViz";

@@ -1,6 +1,6 @@
 package com.abdullah.home.automation.dto.response;
 
-import com.abdullah.home.automation.domain.model.Station;
+import com.abdullah.home.automation.domain.Station;
 import lombok.Data;
 
 import java.util.List;

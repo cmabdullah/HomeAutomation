@@ -2,8 +2,8 @@ package com.abdullah.home.automation.service.impl;
 
 import com.abdullah.home.automation.constants.enums.SwitchState;
 import com.abdullah.home.automation.constants.enums.SwitchType;
-import com.abdullah.home.automation.domain.model.Switch;
-import com.abdullah.home.automation.dto.SwitchInfo;
+import com.abdullah.home.automation.domain.Switch;
+import com.abdullah.home.automation.dto.request.SwitchInfo;
 import com.abdullah.home.automation.exception.ApiError;
 import com.abdullah.home.automation.exception.ApiMessage;
 import com.abdullah.home.automation.registry.LogicalSwitchRegistry;

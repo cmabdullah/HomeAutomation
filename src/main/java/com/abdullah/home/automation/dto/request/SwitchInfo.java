@@ -1,4 +1,4 @@
-package com.abdullah.home.automation.dto;
+package com.abdullah.home.automation.dto.request;
 
 import com.abdullah.home.automation.constants.enums.SwitchName;
 import com.abdullah.home.automation.constants.enums.SwitchState;

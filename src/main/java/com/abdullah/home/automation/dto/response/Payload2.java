@@ -1,4 +1,4 @@
-package com.abdullah.home.automation.domain;
+package com.abdullah.home.automation.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,12 +1,14 @@
 package com.abdullah.home.automation.service.impl;
 
-import com.abdullah.home.automation.domain.model.Favorite;
-import com.abdullah.home.automation.domain.model.Station;
+import com.abdullah.home.automation.domain.Favorite;
+import com.abdullah.home.automation.domain.Station;
+import com.abdullah.home.automation.domain.WeatherEntity;
 import com.abdullah.home.automation.dto.response.StationInfoDto;
 import com.abdullah.home.automation.dto.response.StationsResponseDto;
 import com.abdullah.home.automation.repository.FavoriteRepository;
 import com.abdullah.home.automation.service.FavoriteService;
 import com.abdullah.home.automation.service.StationService;
+import com.abdullah.home.automation.service.WeatherEntityService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,13 +27,15 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     private final FavoriteRepository favoriteRepository;
 
-    private final List<String> payloadTypes = List.of("humidity", "temperature", "pressure", "winddirection", "windspeed", "precipitation", "dewpoint");
+    private final WeatherEntityService weatherEntityService;
 
 
     @Autowired
-    FavoriteServiceImpl(StationService stationService, FavoriteRepository favoriteRepository) {
+    FavoriteServiceImpl(StationService stationService, FavoriteRepository favoriteRepository,
+                        WeatherEntityService weatherEntityService) {
         this.stationService = stationService;
         this.favoriteRepository = favoriteRepository;
+        this.weatherEntityService = weatherEntityService;
     }
 
     @Override
@@ -93,6 +97,10 @@ public class FavoriteServiceImpl implements FavoriteService {
     public StationInfoDto getFavoriteStations() {
 
         List<Favorite> list = (List<Favorite>) favoriteRepository.findAll();
+
+        List<WeatherEntity> weatherEntityList = weatherEntityService.findAll();
+        List<String> payloadTypes = weatherEntityList.stream().filter(Objects::nonNull).map(n ->
+            n.getEntityName()).collect(Collectors.toUnmodifiableList());
 
         List<String> favoriteStations= list.stream().filter(Objects::nonNull)
                 .map(station -> station.getStation().getStationId() + "\t" +

@@ -1,7 +1,7 @@
 package com.abdullah.home.automation.service.impl;
 
-import com.abdullah.home.automation.domain.StationsDto;
-import com.abdullah.home.automation.domain.model.Station;
+import com.abdullah.home.automation.dto.request.StationsDto;
+import com.abdullah.home.automation.domain.Station;
 import com.abdullah.home.automation.dto.response.StationsResponseDto;
 import com.abdullah.home.automation.repository.StationRepository;
 import com.abdullah.home.automation.service.StationService;
@@ -84,12 +84,16 @@ public class StationServiceImpl implements StationService {
     }
 
     @Override
-    public Optional<Station> findById(Long stationId) {
+    public Optional<Station> findById(Long id) {
 
-
-        return stationRepository.findById(stationId);
+        return stationRepository.findById(id);
     }
 
+    @Override
+    public Optional<Station> findByStationId(String stationId) {
+
+        return stationRepository.findByStationId(stationId);
+    }
 
 
 }

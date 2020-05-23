@@ -1,6 +1,6 @@
 package com.abdullah.home.automation.service.impl;
 
-import com.abdullah.home.automation.domain.model.Switch;
+import com.abdullah.home.automation.domain.Switch;
 import com.abdullah.home.automation.registry.SwitchCentralRegistry;
 import com.abdullah.home.automation.repository.SwitchRepository;
 import com.abdullah.home.automation.service.SwitchService;

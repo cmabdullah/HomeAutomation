@@ -18,4 +18,5 @@ public class FilterDto {
 	@NotNull
 	private String namePath;
 	private String payloadType;
+	private String payloadState;
 }

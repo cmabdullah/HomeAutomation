@@ -15,6 +15,12 @@
                 <form:options items="${stationInfoDto.payloadTypes}"></form:options>
             </form:select>
 
+            <form:select path="payloadState">
+                <form:option value="NONE"> --SELECT--</form:option>
+                <form:option value="save">Save</form:option>
+            </form:select>
+
+
             <fieldset class="form-group row">
                 <form:label path="targetDate">Target Date</form:label>
                 <form:input path="targetDate" type="text" class="form-control"

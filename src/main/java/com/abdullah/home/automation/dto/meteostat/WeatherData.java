@@ -1,4 +1,4 @@
-package com.abdullah.home.automation.domain;
+package com.abdullah.home.automation.dto.meteostat;
 
 import java.io.Serializable;
 import lombok.AllArgsConstructor;

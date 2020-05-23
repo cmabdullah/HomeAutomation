@@ -1,6 +1,6 @@
 package com.abdullah.home.automation.registry;
 
-import com.abdullah.home.automation.domain.model.Switch;
+import com.abdullah.home.automation.domain.Switch;
 import lombok.Data;
 
 import java.util.HashMap;

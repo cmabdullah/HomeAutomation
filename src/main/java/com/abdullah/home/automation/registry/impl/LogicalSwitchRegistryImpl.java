@@ -2,8 +2,8 @@ package com.abdullah.home.automation.registry.impl;
 
 import com.abdullah.home.automation.constants.enums.SwitchName;
 import com.abdullah.home.automation.constants.enums.SwitchType;
-import com.abdullah.home.automation.domain.model.Switch;
-import com.abdullah.home.automation.dto.SwitchInfo;
+import com.abdullah.home.automation.domain.Switch;
+import com.abdullah.home.automation.dto.request.SwitchInfo;
 import com.abdullah.home.automation.registry.DBSwitchRegistry;
 import com.abdullah.home.automation.registry.LogicalSwitchRegistry;
 import lombok.extern.slf4j.Slf4j;

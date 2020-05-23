@@ -1,4 +1,4 @@
-package com.abdullah.home.automation.domain;
+package com.abdullah.home.automation.dto.meteostat;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;

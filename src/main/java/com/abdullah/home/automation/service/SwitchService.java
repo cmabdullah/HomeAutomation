@@ -1,6 +1,6 @@
 package com.abdullah.home.automation.service;
 
-import com.abdullah.home.automation.domain.model.Switch;
+import com.abdullah.home.automation.domain.Switch;
 
 import java.util.List;
 import java.util.Map;

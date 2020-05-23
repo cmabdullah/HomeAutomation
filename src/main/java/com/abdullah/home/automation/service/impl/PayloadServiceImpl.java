@@ -3,23 +3,50 @@ package com.abdullah.home.automation.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.abdullah.home.automation.domain.Payload2;
-import com.abdullah.home.automation.domain.WeatherData;
+import com.abdullah.home.automation.domain.MonthlyData;
+import com.abdullah.home.automation.domain.Payload;
+import com.abdullah.home.automation.domain.WeatherEntity;
+import com.abdullah.home.automation.dto.response.Payload2;
+import com.abdullah.home.automation.dto.meteostat.WeatherData;
+import com.abdullah.home.automation.repository.PayloadRepository;
 import com.abdullah.home.automation.service.PayloadService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PayloadServiceImpl implements PayloadService {
 
+	public final PayloadRepository payloadRepository;
+
+	@Autowired
+	public PayloadServiceImpl(PayloadRepository payloadRepository){
+		this.payloadRepository = payloadRepository;
+	}
+
 	@Override
-	public List<Payload2> buildPayloadFromList(List<WeatherData> weatherDataSet, String payloadType) {
+	public void saveAll(List<Payload> payloads) {
+		payloadRepository.saveAll(payloads);
+	}
+
+	@Override
+	public List<Payload> findByMonthlyDataAndWeatherEntity(MonthlyData monthlyData, WeatherEntity weatherEntity) {
+		return payloadRepository.findByMonthlyDataAndWeatherEntity(monthlyData, weatherEntity);
+	}
+
+	@Override
+	public List<Payload> findByMonthlyData(MonthlyData monthlyData) {
+		return payloadRepository.findByMonthlyData(monthlyData);
+	}
+
+	@Override
+	public List<Payload2> buildPayloadFromList(List<WeatherData> weatherData, String payloadType) {
 		List<Payload2> payload2List = new ArrayList<>(23);
 
 		for(int i = 0 ; i< 24 ; i++) {
 			payload2List.add(new Payload2());
 		}
 
-		for (WeatherData wd : weatherDataSet) {
+		for (WeatherData wd : weatherData) {
 
 			if (wd.getTime().contains("00:00:00")) {
 				// 0
@@ -123,8 +150,9 @@ public class PayloadServiceImpl implements PayloadService {
 
 		return payload2List;
 	}
-	
-	
+
+
+
 	private List<Payload2> splitPayload(List<Payload2> payload2List, WeatherData wd, int i, String payloadType) {
 		payload2List.get(i).setHourName("h " + i);
 
