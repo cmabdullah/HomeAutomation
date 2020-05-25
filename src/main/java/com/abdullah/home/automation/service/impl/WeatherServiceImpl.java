@@ -214,7 +214,7 @@ public class WeatherServiceImpl implements WeatherService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    @Override
+    //@Override
     public List<Payload2> processStaticData(FilterDto filterDto, LocalDate targetDate, LocalDate firstDayOfMonth, String payloadType) {
 
         List<WeatherData> list = getStaticData(filterDto);

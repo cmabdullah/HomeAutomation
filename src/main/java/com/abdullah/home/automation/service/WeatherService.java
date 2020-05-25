@@ -14,7 +14,7 @@ public interface WeatherService {
     WeatherResponseDto processStaticData(FilterDto filterDto);
     //List<Payload2> postWeatherRequest(FilterDto filterDto, LocalDate targetDate, LocalDate firstDayOfMonth, String payloadType);
 
-    List<Payload2> processStaticData(FilterDto filterDto, LocalDate targetDate, LocalDate firstDayOfMonth, String payloadType);
+    //List<Payload2> processStaticData(FilterDto filterDto, LocalDate targetDate, LocalDate firstDayOfMonth, String payloadType);
 
     List<String> pathList();
 }

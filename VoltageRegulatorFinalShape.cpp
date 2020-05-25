@@ -25,6 +25,7 @@ volatile int stepCounter = 0;
 
 volatile int dim = 128;
 bool garbageData = false;
+int processId = 0;
 
 void readDimValueFromTextFile(void);
 string convertToString(char *a, int size);
@@ -106,49 +107,90 @@ void *SocketCall(void *threadid) {
     cout << "The message was: " << buffer << endl;
 
     string s_a = "";
+
+    string clientProcessId = "";
+
+    string messageState = "";
+
+    bool ampersand = false;
+
     for (l = 0; l < 100; l++) {
-      // printf("buffer index %d data %c\n", l,buffer[l]);
+       //printf("buffer index %d data %c\n", l,buffer[l]);
       if (isdigit(buffer[l])) {
-        // printf("Got an integer\n");
-        s_a = s_a + buffer[l];
+         printf("Got an integer\n");
+
+         if (ampersand == false){
+            s_a = s_a + buffer[l];
+         } else if (ampersand == true){
+            clientProcessId = clientProcessId + buffer[l];
+         }
+
       } else if (isalpha(buffer[l])) {
         garbageData = true;
-        // printf("Got a char\n");
-        // s_a = s_a+ buffer[l];
-      } else {
-        // printf("other\n");
+         printf("Got a char\n");
+         s_a = s_a+ buffer[l];
+      } else if (buffer[l] == '&'){
+        ampersand = true;
+        printf("ampersand find\n");
+      }
+      else {
+         //printf("other\n");
       }
     }
 
-    if (s_a.length() > 0) {
+    if (s_a.length() > 0 && clientProcessId.length() > 0) {
       cout << "Expected string " << s_a << endl;
       std::cout << "The size of str is " << s_a.length() << " char.\n";
 
       int num = stoi(s_a);
 
+      int processIdStringToInt = stoi(clientProcessId);
       printf("garbageData %d ", garbageData);
-      if (!garbageData) {
-        printf("socketRes %d\n", num);
 
-        printf("dim is:  %d\n", dim);
+      if (processId == processIdStringToInt){
+            if (!garbageData) {
+              printf("socketRes %d\n", num);
 
-        if (num <= 0) {
-          dim = 0;
-        } else if (num >= 128) {
-          dim = 128;
-        } else {
-          dim = num;
-        }
+              printf("dim is:  %d\n", dim);
 
-        printf("Read from socket dim new value is:  %d\n", dim);
+              if (num <= 0) {
+                dim = 0;
+              } else if (num >= 128) {
+                dim = 128;
+              } else {
+                dim = num;
+              }
+
+              printf("Read from socket dim new value is:  %d\n", dim);
+              messageState = "write success";
+            }else{
+                messageState = "write failed";
+            }
+      }else{
+        messageState = "access denied";
+        printf("Access denied");
       }
+
+    } else{
+    messageState = "access denied";
+       printf("Unable to write data got from network\n");
     }
 
     memset(buffer, 0, sizeof buffer);
 
-    clock = time(NULL);
-    snprintf(dataSending, sizeof(dataSending), "%.24s\r\n",
-             ctime(&clock));  // Printing successful message
+    //clock = time(NULL);
+
+    string cma = "";
+    cma = messageState;
+
+    cout <<"messageState " <<messageState << endl;
+    cout <<"cm " <<cma << endl;
+        clock = time(NULL);
+
+
+//ctime(&clock)
+//&cma
+    snprintf(dataSending, sizeof(dataSending), "%.24s\r\n", &messageState);  // Printing successful message
     write(clintConnt, dataSending, strlen(dataSending));
 
     close(clintConnt);
@@ -163,6 +205,17 @@ int main() {
   pthread_t processorThread;
   pthread_t socketCallThread;
   int processor, remoteFlag, ret;
+  pid_t pid, ppid;
+
+  	/* get the process id */
+  	if ((pid = getpid()) < 0) {
+
+  	  perror(" unable to get pid");
+  	} else {
+  	processId = pid;
+  	  printf(" The process id is %d \n", pid);
+  	  printf("processId is %d \n", processId);
+  	}
 
   /**start configuring processor thread with higher priority**/
   struct sched_param param;
