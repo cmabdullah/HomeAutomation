@@ -1,6 +1,6 @@
 Dimmer-Raspberry Pi [inspired by](https://arduinodiy.wordpress.com/category/dimmer/ "Dimmer-Arduino")
 
-![alt text](src/main/webapp/WEB-INF/images/dimmer2_thumb.jpg "This is the complete circuit of the dimmer")
+![alt text](images/dimmer2_thumb.jpg "This is the complete circuit of the dimmer")
 
 **used library** 
 1. pi4j
@@ -14,7 +14,7 @@ represented by a intercept of the axis (zero value) in the graph of the function
 mathematics, acoustics, and image processing.
 
 Zero-Crossing
-![alt-text](src/main/webapp/WEB-INF/images/zero%20crossing.jpg "")
+![alt-text](images/zero%20crossing.jpg "")
 
 1. INT_EDGE_FALLING – Interrupt when the input goes from 1 to 0
 2. INT_EDGE_RISING – Interrupt when the input goes from 0 to 1

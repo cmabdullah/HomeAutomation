@@ -1,0 +1,67 @@
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.hibernate: ERROR
+spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+# ===============================
+# = DATA SOURCE
+# ===============================
+
+# Set here configurations for the database connection
+  datasource:
+    url: jdbc:mysql://localhost:3306/ha?allowPublicKeyRetrieval=true&useSSL=false
+    username: root
+    password: rootcm
+    testWhileIdle: true
+    validationQuery: SELECT 1
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  properties:
+    hibernate:
+      dialect: org.hibernate.dialect.MySQL5Dialect
+      id:
+        new_generator_mappings: false
+
+  thymeleaf:
+    cache: false
+
+server:
+  port: 80
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+  endpoint:
+    health:
+      show-details: always
+
+  info:
+    git:
+      mode: full
+
+  auditevents:
+    enabled: true
+
+#  trace:
+#    http:
+#      enabled: true
+#
+## INFO ENDPOINT CONFIGURATION
+info:
+  app:
+    name: @project.name@
+    description: @project.description@
+    version: @project.version@
+    encoding: @project.build.sourceEncoding@
+    java:
+      version: @java.version@

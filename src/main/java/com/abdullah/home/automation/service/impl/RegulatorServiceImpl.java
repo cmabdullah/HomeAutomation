@@ -109,7 +109,8 @@ public class RegulatorServiceImpl implements RegulatorService {
         return res.intValue();
     }
 
-    private int getRegulatorProcessId() {
+    @Override
+    public int getRegulatorProcessId() {
 
         ProcessBuilder processBuilder = new ProcessBuilder();
         String[] cmd = {"bash", "-c", "ps aux | grep "+Constant.REGULATOR_NAME};
