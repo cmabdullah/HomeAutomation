@@ -22,9 +22,5 @@ public class Util {
             System.out.println(e.getMessage());
             throw new ApiError("object parse error : "+e.getMessage() , HttpStatus.BAD_REQUEST);
         }
-
-
-
     }
-
 }

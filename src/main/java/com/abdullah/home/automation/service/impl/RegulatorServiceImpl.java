@@ -106,7 +106,6 @@ public class RegulatorServiceImpl implements RegulatorService {
 
     private int getActualVoltageToVoltageRange(double voltage) {
         Double res = (100 - (voltage * 100) / 128);
-        ;
         return res.intValue();
     }
 

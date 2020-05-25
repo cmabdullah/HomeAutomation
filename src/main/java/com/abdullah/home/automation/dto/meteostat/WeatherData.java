@@ -12,18 +12,18 @@ public class WeatherData implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
-	String time;
-	String time_local;
-	double temperature ;
-	double dewpoint;
-	int humidity;
-	int precipitation;
-	int precipitation_3;
-	String precipitation_6;
-	String snowdepth;
-	int windspeed;
-	String peakgust;
-	int winddirection;
-	double pressure;
-	int condition;
+	private String time;
+	private String time_local;
+	private double temperature ;
+	private double dewpoint;
+	private int humidity;
+	private int precipitation;
+	private int precipitation_3;
+	private String precipitation_6;
+	private String snowdepth;
+	private int windspeed;
+	private String peakgust;
+	private int winddirection;
+	private double pressure;
+	private int condition;
 }

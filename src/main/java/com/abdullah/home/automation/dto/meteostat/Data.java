@@ -3,39 +3,41 @@ package com.abdullah.home.automation.dto.meteostat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import java.io.Serializable;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @ToString
-public class Data {
+public class Data implements Serializable {
 	
 	@JsonProperty("time")
-	String time;
+	private String time;
 	@JsonProperty("time_local")
-	String timeLocal;
+	private String timeLocal;
 	@JsonProperty("temperature")
-	double temperature ;
+	private double temperature ;
 	@JsonProperty("dewpoint")
-	double dewpoint;
+	private double dewpoint;
 	@JsonProperty("humidity")
-	int humidity;
+	private int humidity;
 	@JsonProperty("precipitation")
-	int precipitation;
+	private int precipitation;
 	@JsonProperty("precipitation_3")
-	int precipitation3;
+	private int precipitation3;
 	@JsonProperty("precipitation_6")
-	String precipitation6;
+	private String precipitation6;
 	@JsonProperty("snowdepth")
-	String snowdepth;
+	private String snowdepth;
 	@JsonProperty("windspeed")
-	int windspeed;
+	private int windspeed;
 	@JsonProperty("peakgust")
-	String peakgust;
+	private String peakgust;
 	@JsonProperty("winddirection")
-	int winddirection;
+	private int winddirection;
 	@JsonProperty("pressure")
-	double pressure;
+	private double pressure;
 	@JsonProperty("condition")
-	int condition;
+	private int condition;
 }

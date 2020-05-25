@@ -2,6 +2,7 @@ package com.abdullah.home.automation.dto.meteostat;
 
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 @NoArgsConstructor
@@ -9,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class ObjectWrapper {
-	Meta meta;
-	List<Data> Data;
+public class ObjectWrapper implements Serializable {
+	private Meta meta;
+	private List<Data> Data;
 }

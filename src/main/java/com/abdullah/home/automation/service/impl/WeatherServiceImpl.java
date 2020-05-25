@@ -31,7 +31,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -44,7 +43,6 @@ import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
 @Service
 public class WeatherServiceImpl implements WeatherService {
 
-
     private final PayloadService payloadService;
 
     private final StationService stationService;
@@ -54,7 +52,7 @@ public class WeatherServiceImpl implements WeatherService {
     private final WeatherEntityService weatherEntityService;
 
     @Autowired
-    WeatherServiceImpl(PayloadService payloadService, StationService stationService, MonthlyDataService monthlyDataService,
+    public WeatherServiceImpl(PayloadService payloadService, StationService stationService, MonthlyDataService monthlyDataService,
                        WeatherEntityService weatherEntityService) {
         this.payloadService = payloadService;
         this.stationService = stationService;
@@ -96,7 +94,6 @@ public class WeatherServiceImpl implements WeatherService {
             }
         }
         return buildWeatherResponseDto(filterDto, targetDate, firstDayOfMonth, payloadType);
-
     }
 
     @Override
@@ -138,7 +135,6 @@ public class WeatherServiceImpl implements WeatherService {
         return weatherResponseDto;
     }
 
-    //@Override
     public List<Payload2> postWeatherRequest(FilterDto filterDto, LocalDate targetDate, LocalDate firstDayOfMonth,
                                              String payloadType ,String station,String  timeZone,String  filterDate) {
 
@@ -163,7 +159,7 @@ public class WeatherServiceImpl implements WeatherService {
         //new key ySq5y6RG
 
         //return dataset [api response]
-        List<WeatherData> list = getData(quoteUrl, stationInfo);
+        List<WeatherData> list = getData(quoteUrl);
 
         final MonthlyData monthlyDataFromDbCpy = monthlyDataFromDb != null ? monthlyDataFromDb : monthlyDataService.save(monthlyData);
 
@@ -178,14 +174,12 @@ public class WeatherServiceImpl implements WeatherService {
         boolean ifFirstDayOfRunningMonthFalse = firstDayOfRunningMonth(firstDayOfMonth);
 
         if (ifFirstDayOfRunningMonthFalse && filterDto.getPayloadState().equals("save")){
-            //add data gurd first
+            //add data gard first
             saveWeatherData(payload2ListData, weatherEntity, monthlyDataFromDbCpy, payloadSize);
         }
 
         return payload2ListData;
     }
-
-
 
     private void saveWeatherData(List<Payload2> payload2List, WeatherEntity weatherEntity,
                                  MonthlyData monthlyDataFromDbCpy, int payloadSize) {
@@ -203,8 +197,6 @@ public class WeatherServiceImpl implements WeatherService {
         }
     }
 
-
-
     private List<Payload2> convertPayloadToPayload2(List<Payload> payloads) {
 
         return payloads.stream().filter(Objects::nonNull).map(n -> new Payload2(n.getHourName(),n.getD1(), n.getD2(),
@@ -214,7 +206,6 @@ public class WeatherServiceImpl implements WeatherService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    //@Override
     public List<Payload2> processStaticData(FilterDto filterDto, LocalDate targetDate, LocalDate firstDayOfMonth, String payloadType) {
 
         List<WeatherData> list = getStaticData(filterDto);
@@ -241,11 +232,10 @@ public class WeatherServiceImpl implements WeatherService {
 
             return walk.map(x -> x.toString())
                     .filter(f -> f.endsWith(".json")).collect(Collectors.toList());
-            //result1.forEach(System.out::println);
         } catch (IOException e) {
             e.printStackTrace();
+            throw new ApiError(ApiMessage.IO_ERROR_WHILE_PROCESS_STATIC_DATA + e.getMessage(), HttpStatus.EXPECTATION_FAILED);
         }
-        return new ArrayList<>();
     }
 
     private List<WeatherData> getStaticData(FilterDto filterDto) {
@@ -255,11 +245,11 @@ public class WeatherServiceImpl implements WeatherService {
             return rowJson.getData();
         } catch (IOException e) {
             e.printStackTrace();
+            throw new ApiError(ApiMessage.IO_ERROR_WHILE_PROCESS_STATIC_DATA + e.getMessage(), HttpStatus.EXPECTATION_FAILED);
         }
-        return null;
     }
 
-    private List<WeatherData> getData(String quoteUrl, Station stationInfo) {
+    private List<WeatherData> getData(String quoteUrl) {
         try {
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder().uri(URI.create(quoteUrl)).build();
@@ -280,10 +270,11 @@ public class WeatherServiceImpl implements WeatherService {
             return weatherDataList;
         } catch (IOException e1) {
             e1.printStackTrace();
+            throw new ApiError(ApiMessage.IO_ERROR_WHILE_NETWORK_CALL_TO_FETCH_DATA + e1.getMessage(), HttpStatus.EXPECTATION_FAILED);
         } catch (InterruptedException e2) {
             e2.printStackTrace();
+            throw new ApiError(ApiMessage.INTERRUPTED_EXCEPTION_WHILE_NETWORK_CALL_TO_FETCH_DATA + e2.getMessage(), HttpStatus.EXPECTATION_FAILED);
         }
-        return new ArrayList<>();
     }
 
     private boolean firstDayOfRunningMonth(LocalDate firstDayOfMonth) {
@@ -315,6 +306,5 @@ public class WeatherServiceImpl implements WeatherService {
         }
 
         return targetDate;
-
     }
 }

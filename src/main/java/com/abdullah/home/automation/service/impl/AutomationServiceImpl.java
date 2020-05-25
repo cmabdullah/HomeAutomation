@@ -32,7 +32,7 @@ public class AutomationServiceImpl implements AutomationService {
     private final SwitchService switchService;
 
     @Autowired
-    AutomationServiceImpl(PhysicalSwitchRegistry physicalSwitchRegistry,
+    public AutomationServiceImpl(PhysicalSwitchRegistry physicalSwitchRegistry,
                           PiSwitchRegistry piSwitchRegistry,
                           LogicalSwitchRegistry logicalSwitchRegistry,
                           SwitchService switchService){

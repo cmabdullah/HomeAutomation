@@ -4,6 +4,7 @@ import com.abdullah.home.automation.domain.Switch;
 import com.abdullah.home.automation.registry.SwitchCentralRegistry;
 import com.abdullah.home.automation.repository.SwitchRepository;
 import com.abdullah.home.automation.service.SwitchService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +17,8 @@ public class SwitchServiceImpl implements SwitchService {
 
     private final SwitchRepository switchRepository;
 
-    SwitchServiceImpl(SwitchRepository switchRepository){
+    @Autowired
+    public SwitchServiceImpl(SwitchRepository switchRepository){
         this.switchRepository = switchRepository;
     }
 

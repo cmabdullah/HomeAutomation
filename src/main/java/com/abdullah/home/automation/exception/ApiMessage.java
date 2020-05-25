@@ -15,4 +15,7 @@ public class ApiMessage {
     public static final String ILLEGAL_ARGUMENT_EXCEPTION = "illegal argument exception";
     public static final String SERVER_RESPONSE_ERROR = "server response error";
     public static final String ACCESS_DENIED_FROM_CP_SERVER = "access denied from cp server";
+    public static final String IO_ERROR_WHILE_NETWORK_CALL_TO_FETCH_DATA = "i/o error while network call to fetch data";
+    public static final String INTERRUPTED_EXCEPTION_WHILE_NETWORK_CALL_TO_FETCH_DATA = "interrupted exception while network call to fetch data";
+    public static final String IO_ERROR_WHILE_PROCESS_STATIC_DATA = "i/o error while process static data";
 }

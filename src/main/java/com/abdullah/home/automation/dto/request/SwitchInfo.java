@@ -7,10 +7,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class SwitchInfo {
+public class SwitchInfo implements Serializable {
     private SwitchName switchName;
     private SwitchState switchState;
     private SwitchType switchType;

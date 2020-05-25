@@ -31,7 +31,7 @@ public class FavoriteServiceImpl implements FavoriteService {
 
 
     @Autowired
-    FavoriteServiceImpl(StationService stationService, FavoriteRepository favoriteRepository,
+    public FavoriteServiceImpl(StationService stationService, FavoriteRepository favoriteRepository,
                         WeatherEntityService weatherEntityService) {
         this.stationService = stationService;
         this.favoriteRepository = favoriteRepository;

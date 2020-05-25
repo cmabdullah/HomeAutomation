@@ -17,7 +17,7 @@ public class PhysicalSwitchRegistryImpl implements PhysicalSwitchRegistry {
     private final DBSwitchRegistry dBSwitchRegistry;
 
     @Autowired
-    PhysicalSwitchRegistryImpl(DBSwitchRegistry dBSwitchRegistry) {
+    public PhysicalSwitchRegistryImpl(DBSwitchRegistry dBSwitchRegistry) {
         this.dBSwitchRegistry = dBSwitchRegistry;
     }
 

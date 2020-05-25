@@ -23,7 +23,7 @@ public class DBSwitchRegistryImpl implements DBSwitchRegistry {
     private final SwitchService switchService;
 
     @Autowired
-    DBSwitchRegistryImpl(SwitchService switchService) {
+    public DBSwitchRegistryImpl(SwitchService switchService) {
         this.switchService = switchService;
     }
 

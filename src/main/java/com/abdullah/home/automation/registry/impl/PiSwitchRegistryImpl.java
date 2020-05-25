@@ -13,7 +13,7 @@ public class PiSwitchRegistryImpl implements PiSwitchRegistry {
     private final DBSwitchRegistry dBSwitchRegistry;
 
     @Autowired
-    PiSwitchRegistryImpl(DBSwitchRegistry dBSwitchRegistry){
+    public PiSwitchRegistryImpl(DBSwitchRegistry dBSwitchRegistry){
         this.dBSwitchRegistry = dBSwitchRegistry;
     }
 

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.List;
 
 @Builder
@@ -14,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Entity
-public class MonthlyData {
+public class MonthlyData implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

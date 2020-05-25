@@ -4,19 +4,21 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class StationsDto {
+public class StationsDto implements Serializable {
 
-    String stationId;
-    String country;
-    String stationName;
-    String number1;
-    String number2;
-    String quantity;
-    String stationKey;
-    String stationId2;
-    String key2;
-    String state;
+    private String stationId;
+    private String country;
+    private String stationName;
+    private String number1;
+    private String number2;
+    private String quantity;
+    private String stationKey;
+    private String stationId2;
+    private String key2;
+    private String state;
 }
