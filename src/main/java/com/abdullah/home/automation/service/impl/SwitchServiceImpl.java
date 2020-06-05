@@ -62,4 +62,9 @@ public class SwitchServiceImpl implements SwitchService {
     public Switch save(Switch mySwitch) {
         return switchRepository.save(mySwitch);
     }
+
+    @Override
+    public void deleteAll() {
+        switchRepository.deleteAll();
+    }
 }

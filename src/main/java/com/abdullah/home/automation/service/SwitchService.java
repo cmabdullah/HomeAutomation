@@ -14,4 +14,6 @@ public interface SwitchService {
     Optional<Switch> findBySwitchName(String switchName);
     Map<String,Switch> findAllSwitchMap();
     Switch save(Switch mySwitch);
+
+    void deleteAll();
 }

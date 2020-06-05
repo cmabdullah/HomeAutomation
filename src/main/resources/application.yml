@@ -1,5 +1,6 @@
 logging:
   level:
+    com.abdullah.home.automation: DEBUG
     org.springframework.web: DEBUG
     org.hibernate: ERROR
 spring:

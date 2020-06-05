@@ -11,4 +11,6 @@ public interface WeatherEntityService {
     Optional<WeatherEntity> findByEntityName(String entity);
 
     List<WeatherEntity> findAll();
+
+    void deleteAll();
 }

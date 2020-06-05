@@ -78,10 +78,17 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
+    public List<Station> favoriteActiveStation() {
+        List<Favorite> list = (List<Favorite>) favoriteRepository.findAll();
+        return list.stream().filter(Objects::nonNull).filter(Favorite::isActive)
+                .map(Favorite::getStation)
+                .collect(Collectors.toList());
+    }
+    @Override
     public StationsResponseDto findActiveFavorite() {
         List<Favorite> list = (List<Favorite>) favoriteRepository.findAll();
-        List<Station> filterList = list.stream().filter(Objects::nonNull).filter(n -> n.isActive() == true)
-                .map(n -> n.getStation())
+        List<Station> filterList = list.stream().filter(Objects::nonNull).filter(Favorite::isActive)
+                .map(Favorite::getStation)
                 .collect(Collectors.toList());
 
         StationsResponseDto stationsResponseDto = new StationsResponseDto();
@@ -99,10 +106,10 @@ public class FavoriteServiceImpl implements FavoriteService {
         List<Favorite> list = (List<Favorite>) favoriteRepository.findAll();
 
         List<WeatherEntity> weatherEntityList = weatherEntityService.findAll();
-        List<String> payloadTypes = weatherEntityList.stream().filter(Objects::nonNull).map(n ->
-            n.getEntityName()).collect(Collectors.toUnmodifiableList());
+        List<String> payloadTypes = weatherEntityList.stream().filter(Objects::nonNull).map(WeatherEntity::getEntityName).collect(Collectors.toUnmodifiableList());
 
         List<String> favoriteStations= list.stream().filter(Objects::nonNull)
+                .filter(Favorite::isActive)
                 .map(station -> station.getStation().getStationId() + "\t" +
                         station.getStation().getCountry() + "\t" +
                         station.getStation().getStationName() + "\t" +

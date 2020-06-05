@@ -44,4 +44,9 @@ public class WeatherEntityServiceImpl implements WeatherEntityService {
     public List<WeatherEntity> findAll() {
         return (List<WeatherEntity>) weatherEntityRepository.findAll();
     }
+
+    @Override
+    public void deleteAll() {
+        weatherEntityRepository.deleteAll();
+    }
 }

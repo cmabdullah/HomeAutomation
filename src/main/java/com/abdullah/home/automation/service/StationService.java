@@ -10,11 +10,13 @@ import java.util.Optional;
 
 public interface StationService {
 
-    List<StationsDto> migrateStationInfo()throws IOException;
+    List<StationsDto> migrateStationInfo() ;
 
     StationsResponseDto findStations(String keyword);
 
     Optional<Station> findById(Long id);
 
     Optional<Station> findByStationId(String stationId);
+
+    void deleteAll();
 }
