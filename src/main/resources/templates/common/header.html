@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="common-header">
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>Home Automation</title>
+	<link href="/webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/webjars/bootstrap/3.3.6/css/bootstrap.css" rel="stylesheet" />
+
+</head>
+<body>
+<div th:fragment="navbar">
+
+	<nav role="navigation" class="navbar navbar-default">
+		<div class="">
+			<!-- 		<a href="http://www.cmabdullah.me" class="navbar-brand">C M Abdullah</a> -->
+		</div>
+		<div class="navbar-collapse">
+			<ul class="nav navbar-nav">
+				<li class="active"><a th:href="@{/}">Home</a></li>
+				<li><a th:href="@{/regulator}">Regulator</a></li>
+				<li><a th:href="@{/stations}">Stations</a></li>
+				<li role="presentation" class="dropdown">
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+						Weather Info <span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a th:href="@{/weather}">Weather</a></li>
+						<li><a th:href="@{/staticFind}">Static Data</a></li>
+						<li><a th:href="@{/remote}">Dynamic Data</a></li>
+					</ul>
+				</li>
+<!--				<c:if test="${stationsResponseDto.stationSearch == true}">-->
+					<li>
+						<form class="navbar-form" th:action="@{/stations}"  method="post">
+							<div class="form-group">
+								<input type="text" name="keyword" class="form-control"
+									   placeholder="station name" />
+							</div>
+							<button type="submit" class="btn btn-default">Search</button>
+						</form>
+					</li>
+<!--				</c:if>-->
+			</ul>
+
+			<!-- 		<ul class="nav navbar-nav navbar-right"> -->
+			<!-- 			<li><a href="/logout">Logout</a></li> -->
+			<!-- 		</ul> -->
+		</div>
+	</nav>
+
+</div>
+
+<div th:fragment="body-bottom-scripts">
+
+	<script src="webjars/jquery/1.9.1/jquery.min.js"></script>
+	<script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<script src="webjars/bootstrap-datepicker/1.0.1/js/bootstrap-datepicker.js"></script>
+	<script src="webjars/bootstrap4-toggle/3.6.0/js/bootstrap4-toggle.min.js"></script>
+
+
+	<!--    <script th:src="@{/js/scripts.js}"></script>-->
+
+	<script>
+		$('#targetDate').datepicker({
+			format: 'dd/mm/yyyy'
+		});
+
+
+		$("#light1").on("click", lightJs);
+
+		function lightJs() {
+
+			let i;
+			if (light1.checked === true) {
+				i = 1;
+				const  id = $('#l1').val(i);
+				console.log("light on : "+ i);
+
+				var switchInfo = {}
+				switchInfo["switchName"] = "light1";
+				switchInfo["switchState"] = "on";
+				switchInfo["switchType"] = "logical";
+				console.log("stringify : "+ JSON.stringify(switchInfo))
+				$.ajax({
+					type: "POST",
+					contentType: "application/json",
+					url: "/logicalSwitchRest",
+					data: JSON.stringify(switchInfo),
+
+					dataType: 'json',
+					cache: false,
+					timeout: 600000,
+					success: function (data) {
+						console.log("success : ", data);
+					},
+					error: function (e) {
+						console.log("ERROR : ", e);
+					}
+				});
+
+			} else {
+				i = 0;
+				$('#l1').val(i);
+				console.log("light off : "+ i);
+
+				var switchInfo = {}
+				switchInfo["switchName"] = "light1";
+				switchInfo["switchState"] = "off";
+				switchInfo["switchType"] = "logical";
+				console.log("stringify : "+ JSON.stringify(switchInfo))
+				$.ajax({
+					type: "POST",
+					contentType: "application/json",
+					url: "/logicalSwitchRest",
+					data: JSON.stringify(switchInfo),
+
+					dataType: 'json',
+					cache: false,
+					timeout: 600000,
+					success: function (data) {
+						console.log("success : ", data);
+					},
+					error: function (e) {
+						console.log("ERROR : ", e);
+					}
+				});
+			}
+		}
+
+		$("#fan").on("click", fanJs);
+
+		function fanJs() {
+
+			let j;
+			if (fan.checked === true) {
+				j = 1;
+				$('#f1').val(j);
+				console.log("fan on : "+ j);
+			} else {
+				j = 0;
+				$('#f1').val(j);
+				console.log("fan off : "+ j);
+			}
+			//console.log(id);
+		}
+
+		$("#regulatorParam").on("change", sum);
+
+		function sum() {
+			const id = $('#regulatorParam').val();
+			console.log(id);
+
+			$('#sp1').val(id);
+
+
+			var regulatorDto = {}
+			regulatorDto["switchName"] = "fan1";
+			regulatorDto["voltageRange"] = id;
+			console.log("stringify : "+ JSON.stringify(regulatorDto))
+			$.ajax({
+				type: "POST",
+				contentType: "application/json",
+				url: "/regulatorRest",
+				data: JSON.stringify(regulatorDto),
+
+				dataType: 'json',
+				cache: false,
+				timeout: 600000,
+				success: function (data) {
+					console.log("success : ", data);
+				},
+				error: function (e) {
+					console.log("ERROR : ", e);
+				}
+			});
+
+
+
+
+		}
+		/*****
+		 *
+		 *         $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: "/regulatorRest",
+            data: JSON.stringify(regulatorDto),
+            dataType: 'json',
+            cache: false,
+            timeout: 600000,
+            success: function (data) {
+                console.log("success : ", data);
+            },
+            error: function (e) {
+                console.log("ERROR : ", e);
+            }
+        });
+		 *
+		 * **/
+
+		/**
+		 *
+		 * $.ajax({
+            type: 'POST',
+            url: '/remove/?arr=' + id,
+            success: function () {
+                //location.reload();
+                //$valueSpan.html($value.val());
+            },
+            error: function (res) {
+                console.log(res);
+                location.reload();
+            }
+        });
+		 *
+		 * **/
+
+		$(document).ready(function() {
+
+			$("#selectAllBooks").click(function() {
+				console.log("test");
+				if($(this).prop("checked")==true) {
+					$(".checkboxBook").click();
+				} else if ($(this).prop("checked")==false) {
+					$(".checkboxBook").prop("checked",false);
+				}
+			})
+		});
+	</script>
+</div>
+
+<div th:fragment="chart-scripts">
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+
+
+		const payload2List = /*[[${weatherResponseDto.payload2List}]]*/ 'default';
+		console.log(payload2List);
+
+
+
+		const arrayLength = payload2List.length;
+		for (var i = 0; i < arrayLength; i++) {
+			console.log(
+					payload2List[i].hourName ,
+					payload2List[i].d1, payload2List[i].d2, payload2List[i].d3, payload2List[i].d4, payload2List[i].d5,
+					payload2List[i].d6, payload2List[i].d7, payload2List[i].d8,  payload2List[i].d9, payload2List[i].d10,
+					payload2List[i].d11, payload2List[i].d12, payload2List[i].d13, payload2List[i].d14,  payload2List[i].d15,
+					payload2List[i].d16, payload2List[i].d17, payload2List[i].d18, payload2List[i].d19, payload2List[i].d20,
+					payload2List[i].d21, payload2List[i].d22, payload2List[i].d23, payload2List[i].d24, payload2List[i].d25,
+					payload2List[i].d26, payload2List[i].d27, payload2List[i].d28, payload2List[i].d29, payload2List[i].d30,
+					payload2List[i].d31
+
+			);
+		}
+
+		function drawChart() {
+			// Define the chart to be drawn.
+			var data = new google.visualization.DataTable();
+			data.addColumn('string', 'Month');
+			data.addColumn('number', 'Tokyo');
+			data.addColumn('number', 'New York');
+			data.addColumn('number', 'Berlin');
+			data.addColumn('number', 'London');
+			data.addRows([
+				['Jan', 7.0, -0.2, -0.9, 3.9],
+				['Feb', 6.9, 0.8, 0.6, 4.2],
+				['Mar', 9.5, 5.7, 3.5, 5.7],
+				['Apr', 14.5, 11.3, 8.4, 8.5],
+				['May', 18.2, 17.0, 13.5, 11.9],
+				['Jun', 21.5, 22.0, 17.0, 15.2],
+
+				['Jul', 25.2, 24.8, 18.6, 17.0],
+				['Aug', 26.5, 24.1, 17.9, 16.6],
+				['Sep', 23.3, 20.1, 14.3, 14.2],
+				['Oct', 18.3, 14.1, 9.0, 10.3],
+				['Nov', 13.9, 8.6, 3.9, 6.6],
+				['Dec', 9.6, 2.5, 1.0, 4.8]
+			]);
+
+			// Set chart options
+			var options = {
+				'title': 'Average Temperatures of Cities',
+				hAxis: {
+					title: 'Month'
+				},
+				vAxis: {
+					title: 'Temperature'
+				},
+				'width': 550,
+				'height': 400
+			};
+
+			// Instantiate and draw the chart.
+			var chart = new google.visualization.LineChart(document.getElementById('container'));
+			chart.draw(data, options);
+
+		}
+
+		google.charts.setOnLoadCallback(drawChart);
+
+
+	</script>
+</div>
+
+</body>
+</html>

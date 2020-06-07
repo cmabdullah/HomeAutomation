@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1000/xhtml">
+<head th:replace="common/header :: common-header"><title>Homepage</title></head>
+
+<body>
+<div th:replace="common/header :: navbar"></div>
+<div class="container">
+    <h1>Home automation</h1>
+
+
+        <div class="row">
+            <form method="post" th:action="@{/remote}" th:object="${filterDto}">
+
+                <label>
+                    <select th:field="*{namePath}">
+                        <option value="">Select</option>
+                        <option th:each="station : ${stationInfoDto.stations}"
+                                th:value="${station}"
+                                th:text="${station}"></option>
+                    </select>
+                </label>
+
+                <label>
+                    <select th:field="*{payloadType}">
+                        <option value="">Select</option>
+                        <option th:each="payloadName : ${stationInfoDto.payloadTypes}"
+                                th:value="${payloadName}"
+                                th:text="${payloadName}"></option>
+                    </select>
+                </label>
+
+                <label>
+                    <select th:field="*{payloadState}">
+                        <option value="NONE">Select</option>
+                        <option value="save">Save</option>
+                    </select>
+                </label>
+
+                <label class="col-md-2 control-label" for="targetDate">Publish Date</label>
+                <div class="col-md-8">
+                    <input type="text" name="targetDate" class="form-control"
+                           id="targetDate" th:value="${targetDate}"
+                           placeholder="targetDate" required="required"> <span class="help-book">Search Date</span>
+                </div>
+                <!--                th:value="${targetDate}"-->
+                <button type="submit" class="btn btn-success">Add</button>
+            </form>
+        </div>
+
+</div>
+
+<div th:replace="common/header :: body-bottom-scripts"></div>
+</body>
+</html>

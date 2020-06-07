@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1000/xhtml">
+<head th:replace="common/header :: common-header"><title>Homepage</title></head>
+
+<body>
+<div th:replace="common/header :: navbar"></div>
+<div class="container">
+    <h1>Home automation</h1>
+
+    <div class="row">
+        <div class="row">
+            <div class="table-responsive">
+                <table id="bookListTable" class="table taable-bordered table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th><input id="selectAllBooks" type="checkbox"/></th>
+                        <th>country</th>
+                        <th>stationId</th>
+                        <th>stationName</th>
+                        <th>state</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <tr data-th-each="station : ${stationsResponseDto.stationList}">
+
+                        <td>
+                            <input hidden="hidden" name="id" th:value="${station.id}"/>
+                            <input th:id="'selected'+${station.id}" class="checkboxBook" type="checkbox"/>
+                        </td>
+
+                        <td th:text="${station.country}"></td>
+                        <td th:text="${station.stationId}"></td>
+                        <td th:text="${station.stationName}"></td>
+                        <td th:text="${station.state}"></td>
+
+
+                        <!-- IF CUSTOMER IS ANONYMOUS -->
+                        <div th:if="${stationsResponseDto.add}">
+                            <td>
+
+                                <form th:action="@{favorite}" method="get">
+                                    <input type="hidden" name="id" th:value="${station.id}"/>
+                                    <input type="submit" value="Add" class="btn btn-success"/>
+                                </form>
+                        </div>
+
+                        <div th:if="${stationsResponseDto.delete}">
+                            <td>
+                                <form th:action="@{delFavorite}" method="get">
+                                    <input type="hidden" name="id" th:value="${station.id}"/>
+                                    <input type="submit" value="Delete" class="btn btn-danger"/>
+                                </form>
+                        </div>
+
+
+                    </tr>
+                    </c:forEach>
+
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="common/header :: body-bottom-scripts"></div>
+</body>
+</html>
+
+

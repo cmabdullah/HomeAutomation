@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1000/xhtml">
+<head>
+    <title>Google Charts Tutorial</title>
+    <script type = "text/javascript" src = "https://www.gstatic.com/charts/loader.js">
+    </script>
+    <script type = "text/javascript">
+        google.charts.load('current', {packages: ['corechart','line']});
+    </script>
+</head>
+
+<body>
+<div id = "container" style = "width: 550px; height: 400px; margin: 0 auto">
+</div>
+
+<script th:inline="javascript">
+
+    const payload2List = /*[[${weatherResponseDto.payload2List}]]*/ 'default';
+
+    const arrayLength = payload2List.length;
+    for (var i = 0; i < arrayLength; i++) {
+        console.log(
+            payload2List[i].hourName ,
+            payload2List[i].d1, payload2List[i].d2, payload2List[i].d3, payload2List[i].d4, payload2List[i].d5,
+            payload2List[i].d6, payload2List[i].d7, payload2List[i].d8,  payload2List[i].d9, payload2List[i].d10,
+            payload2List[i].d11, payload2List[i].d12, payload2List[i].d13, payload2List[i].d14,  payload2List[i].d15,
+            payload2List[i].d16, payload2List[i].d17, payload2List[i].d18, payload2List[i].d19, payload2List[i].d20,
+            payload2List[i].d21, payload2List[i].d22, payload2List[i].d23, payload2List[i].d24, payload2List[i].d25,
+            payload2List[i].d26, payload2List[i].d27, payload2List[i].d28, payload2List[i].d29, payload2List[i].d30,
+            payload2List[i].d31
+
+        );
+    }
+
+
+    function drawChart() {
+        console.log(payload2List);
+
+        // Define the chart to be drawn.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Hour');
+        data.addColumn('number', 'd1');
+        data.addColumn('number', 'd2');
+        data.addColumn('number', 'd3');
+        data.addColumn('number', 'd4');
+        data.addColumn('number', 'd5');
+        data.addColumn('number', 'd6');
+        data.addColumn('number', 'd7');
+        data.addColumn('number', 'd8');
+        data.addColumn('number', 'd9');
+        data.addColumn('number', 'd10');
+        data.addColumn('number', 'd11');
+        data.addColumn('number', 'd12');
+        data.addColumn('number', 'd13');
+        data.addColumn('number', 'd14');
+        data.addColumn('number', 'd15');
+        data.addColumn('number', 'd16');
+        data.addColumn('number', 'd17');
+        data.addColumn('number', 'd18');
+        data.addColumn('number', 'd19');
+        data.addColumn('number', 'd20');
+        data.addColumn('number', 'd21');
+        data.addColumn('number', 'd22');
+        data.addColumn('number', 'd23');
+        data.addColumn('number', 'd24');
+        data.addColumn('number', 'd25');
+        data.addColumn('number', 'd26');
+        data.addColumn('number', 'd27');
+        data.addColumn('number', 'd28');
+        data.addColumn('number', 'd29');
+        data.addColumn('number', 'd30');
+        data.addColumn('number', 'd31');
+        for (var i = 0; i < payload2List.length; i++) {
+            data.addRows([
+                [payload2List[i].hourName,
+                    payload2List[i].d1, payload2List[i].d2, payload2List[i].d3, payload2List[i].d4, payload2List[i].d5,
+                    payload2List[i].d6, payload2List[i].d7, payload2List[i].d8 , payload2List[i].d9, payload2List[i].d10 ,
+                    payload2List[i].d11, payload2List[i].d12, payload2List[i].d13 , payload2List[i].d14, payload2List[i].d15 ,
+                    payload2List[i].d16, payload2List[i].d17, payload2List[i].d18 , payload2List[i].d19, payload2List[i].d20 ,
+                    payload2List[i].d21, payload2List[i].d22, payload2List[i].d23 , payload2List[i].d34, payload2List[i].d25 ,
+                    payload2List[i].d26, payload2List[i].d27, payload2List[i].d28 , payload2List[i].d29, payload2List[i].d30 ,
+                    payload2List[i].d31],
+            ]);
+        }
+
+        var fd = /*[[${weatherResponseDto.filtarDate}]]*/ 'default';
+
+        var payloadType =/*[[${weatherResponseDto.payloadType}]]*/ 'default';
+
+        // // Set chart options
+        // var options = {'title' : 'Average Temperatures of Cities',
+        //     hAxis: {
+        //         title: 'Month'
+        //     },
+        //     vAxis: {
+        //         title: 'Temperature'
+        //     },
+        //     'width':1700,
+        //     'height':1440
+        // };
+
+        // Set chart options
+        var options = {
+            'title': payloadType + ' analysis report of ' + fd,
+            hAxis: {
+                title: 'Hour'
+            },
+            vAxis: {
+                title: payloadType
+            },
+            'width': 1700,
+            'height': 1440,
+            pointsVisible: true,
+            chartArea: {left: 60, top: 22}
+        };
+
+        // Instantiate and draw the chart.
+        var chart = new google.visualization.LineChart(document.getElementById('container'));
+        chart.draw(data, options);
+    }
+    google.charts.setOnLoadCallback(drawChart);
+</script>
+</body>
+</html>

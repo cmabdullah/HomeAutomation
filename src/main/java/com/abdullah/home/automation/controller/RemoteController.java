@@ -51,7 +51,11 @@ public class RemoteController {
     String remoteGet(ModelMap modelMap) {
 
         StationInfoDto stationInfoDto = favoriteService.getFavoriteStations();
-        modelMap.addAttribute("filterDto", new FilterDto());
+        FilterDto filterDto = new FilterDto();
+        filterDto.setNamePath("C");
+        filterDto.setPayloadState("C");
+        filterDto.setPayloadType("C");
+        modelMap.addAttribute("filterDto", filterDto);
         modelMap.addAttribute("stationInfoDto", stationInfoDto);
 
         return "remote";
