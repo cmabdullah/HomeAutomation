@@ -15,14 +15,19 @@ import com.abdullah.home.automation.exception.ApiError;
 import com.abdullah.home.automation.exception.ApiMessage;
 import com.abdullah.home.automation.service.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -39,7 +44,6 @@ import java.util.stream.Stream;
 import static java.time.temporal.TemporalAdjusters.firstDayOfMonth;
 import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
 
-@Slf4j
 @Service
 public class WeatherServiceImpl implements WeatherService {
 
@@ -50,6 +54,8 @@ public class WeatherServiceImpl implements WeatherService {
     private final MonthlyDataService monthlyDataService;
 
     private final WeatherEntityService weatherEntityService;
+
+    private static final Logger log = LoggerFactory.getLogger(WeatherServiceImpl.class);
 
     @Autowired
     public WeatherServiceImpl(PayloadService payloadService, StationService stationService, MonthlyDataService monthlyDataService,
@@ -141,7 +147,10 @@ public class WeatherServiceImpl implements WeatherService {
         Station stationInfo = stationService.findByStationId(station)
                 .orElseThrow(ApiError.createSingletonSupplier(ApiMessage.STATION_NOT_FOUND, HttpStatus.NOT_FOUND));
 
-        final MonthlyData monthlyData = MonthlyData.builder().station(stationInfo).payloadMonth(filterDate).build();
+        MonthlyData monthlyData = new MonthlyData();
+        monthlyData.setStation(stationInfo);
+        monthlyData.setPayloadMonth(filterDate);
+
         final MonthlyData monthlyDataFromDb = monthlyDataService.findByStationAndPayloadMonth(stationInfo, filterDate);
 
         final WeatherEntity weatherEntity = weatherEntityService.findByEntityName(payloadType)
@@ -190,7 +199,7 @@ public class WeatherServiceImpl implements WeatherService {
                         n.getD8(), n.getD9(), n.getD10(), n.getD11(), n.getD12(), n.getD13(), n.getD14(), n.getD15(),
                         n.getD16(), n.getD17(), n.getD18(), n.getD19(), n.getD20(), n.getD21(), n.getD22(),
                         n.getD23(), n.getD24(), n.getD25(), n.getD26(), n.getD27(), n.getD28(), n.getD29(), n.getD30(),
-                        n.getD31(), monthlyDataFromDbCpy, weatherEntity)).collect(Collectors.toUnmodifiableList());
+                        n.getD31(), monthlyDataFromDbCpy, weatherEntity)).collect(Collectors.toList());
 
         if (payloadSize == 0){
             payloadService.saveAll(payloadList);
@@ -203,7 +212,7 @@ public class WeatherServiceImpl implements WeatherService {
                 n.getD3(), n.getD4(), n.getD5(), n.getD6(), n.getD7(), n.getD8(), n.getD9(), n.getD10(), n.getD11(), n.getD12(),
                 n.getD13(), n.getD14(), n.getD15(), n.getD16(), n.getD17(), n.getD18(), n.getD19(), n.getD20(), n.getD21(), n.getD22(),
                 n.getD23(), n.getD24(), n.getD25(), n.getD26(), n.getD27(), n.getD28(), n.getD29(), n.getD30(), n.getD31()))
-                .collect(Collectors.toUnmodifiableList());
+                .collect(Collectors.toList());
     }
 
     public List<Payload2> processStaticData(FilterDto filterDto, LocalDate targetDate, LocalDate firstDayOfMonth, String payloadType) {
@@ -230,7 +239,7 @@ public class WeatherServiceImpl implements WeatherService {
 
         try (Stream<Path> walk = Files.walk(Paths.get(basePath + "/DataSet/"))) {
 
-            return walk.map(x -> x.toString())
+            return walk.map(Path::toString)
                     .filter(f -> f.endsWith(".json")).collect(Collectors.toList());
         } catch (IOException e) {
             e.printStackTrace();
@@ -251,10 +260,28 @@ public class WeatherServiceImpl implements WeatherService {
 
     private List<WeatherData> getData(String quoteUrl) {
         try {
+            /***
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder().uri(URI.create(quoteUrl)).build();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             String responseBody = response.body();
+
+             **/
+
+            //move to java 8
+            StringBuffer content = new StringBuffer();
+            URL url = new URL(quoteUrl);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+
+            String responseBody = content.toString();
             log.info(responseBody);
             ObjectMapper mapper = new ObjectMapper();
             ObjectWrapper staff = mapper.readValue(responseBody, ObjectWrapper.class);
@@ -271,7 +298,7 @@ public class WeatherServiceImpl implements WeatherService {
         } catch (IOException e1) {
             e1.printStackTrace();
             throw new ApiError(ApiMessage.IO_ERROR_WHILE_NETWORK_CALL_TO_FETCH_DATA + e1.getMessage(), HttpStatus.EXPECTATION_FAILED);
-        } catch (InterruptedException e2) {
+        } catch (Exception e2) {
             e2.printStackTrace();
             throw new ApiError(ApiMessage.INTERRUPTED_EXCEPTION_WHILE_NETWORK_CALL_TO_FETCH_DATA + e2.getMessage(), HttpStatus.EXPECTATION_FAILED);
         }
@@ -280,11 +307,7 @@ public class WeatherServiceImpl implements WeatherService {
     private boolean firstDayOfRunningMonth(LocalDate firstDayOfMonth) {
         LocalDate firstDayOfMonthRunningMonth = LocalDate.now().with(firstDayOfMonth());
 
-        if (firstDayOfMonthRunningMonth.toString().equals(firstDayOfMonth.toString())){
-            return false;
-        }else {
-            return true;
-        }
+        return !firstDayOfMonthRunningMonth.toString().equals(firstDayOfMonth.toString());
     }
 
 

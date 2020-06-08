@@ -2,14 +2,16 @@ package com.abdullah.home.automation.exception;
 
 import javax.servlet.http.HttpServletRequest;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
-@Slf4j
 @Controller("error")
 public class JspExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(JspExceptionHandler.class);
 
     @ExceptionHandler(Exception.class)
     public ModelAndView handleError(HttpServletRequest req, Exception ex) {

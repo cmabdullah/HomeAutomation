@@ -1,13 +1,12 @@
 package com.abdullah.home.automation.exception;
 
-import lombok.Data;
 import org.springframework.http.HttpStatus;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-@Data
 public class ApiError extends RuntimeException {
 
     private final String code;
@@ -31,5 +30,40 @@ public class ApiError extends RuntimeException {
     @Override
     public String getMessage() {
         return super.getMessage();
+    }
+
+
+    public String getCode() {
+        return code;
+    }
+
+    public HttpStatus getStatus() {
+        return status;
+    }
+
+    public Object[] getArgs() {
+        return args;
+    }
+
+    public void setArgs(Object[] args) {
+        this.args = args;
+    }
+
+    public Map<String, String> getErrors() {
+        return errors;
+    }
+
+    public void setErrors(Map<String, String> errors) {
+        this.errors = errors;
+    }
+
+    @Override
+    public String toString() {
+        return "ApiError{" +
+                "code='" + code + '\'' +
+                ", status=" + status +
+                ", args=" + Arrays.toString(args) +
+                ", errors=" + errors +
+                '}';
     }
 }

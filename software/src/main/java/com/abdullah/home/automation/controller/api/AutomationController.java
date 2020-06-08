@@ -10,7 +10,8 @@ import com.abdullah.home.automation.exception.ApiResponse;
 import com.abdullah.home.automation.registry.SwitchCentralRegistry;
 import com.abdullah.home.automation.service.AutomationService;
 import com.abdullah.home.automation.service.RegulatorService;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Map;
 
-@Slf4j
 //https://mkyong.com/spring-boot/spring-boot-ajax-example/
 @RestController
 public class AutomationController {
@@ -28,6 +28,8 @@ public class AutomationController {
     private final RegulatorService regulatorService;
 
     private final AutomationService automationService;
+
+    private static final Logger log = LoggerFactory.getLogger(AutomationController.class);
 
     @Autowired
     AutomationController(RegulatorService regulatorService,

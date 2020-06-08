@@ -3,18 +3,21 @@ package com.abdullah.home.automation;
 import com.abdullah.home.automation.domain.MainSwitch;
 import com.abdullah.home.automation.registry.SwitchCentralRegistry;
 import com.abdullah.home.automation.service.*;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@Slf4j
+
 @SpringBootApplication
 public class HomeAutomationApplication implements CommandLineRunner {
 
 	private final SwitchService switchService;
 	private final DataMigrationService dataMigrationService;
+
+	private static final Logger log = LoggerFactory.getLogger(HomeAutomationApplication.class);
 
 	@Autowired
 	public HomeAutomationApplication(SwitchService switchService,DataMigrationService dataMigrationService) {

@@ -9,7 +9,8 @@ import com.abdullah.home.automation.repository.FavoriteRepository;
 import com.abdullah.home.automation.service.FavoriteService;
 import com.abdullah.home.automation.service.StationService;
 import com.abdullah.home.automation.service.WeatherEntityService;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 public class FavoriteServiceImpl implements FavoriteService {
 
@@ -29,6 +29,7 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     private final WeatherEntityService weatherEntityService;
 
+    private static final Logger log = LoggerFactory.getLogger(FavoriteServiceImpl.class);
 
     @Autowired
     public FavoriteServiceImpl(StationService stationService, FavoriteRepository favoriteRepository,

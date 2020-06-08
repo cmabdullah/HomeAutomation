@@ -5,13 +5,13 @@ import com.abdullah.home.automation.domain.Switch;
 import com.abdullah.home.automation.domain.WeatherEntity;
 import com.abdullah.home.automation.dto.request.StationsDto;
 import com.abdullah.home.automation.service.*;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Slf4j
 @Service
 public class DataMigrationServiceImpl implements DataMigrationService {
 
@@ -19,6 +19,9 @@ public class DataMigrationServiceImpl implements DataMigrationService {
     private final StationService stationService;
     private final WeatherEntityService weatherEntityService;
     private final MainSwitchService mainSwitchService;
+
+    private static final Logger log = LoggerFactory.getLogger(DataMigrationServiceImpl.class);
+
 
     @Autowired
     public DataMigrationServiceImpl(StationService stationService,
@@ -39,9 +42,12 @@ public class DataMigrationServiceImpl implements DataMigrationService {
         MainSwitch migSuccessMainSwitch = null;
 
         if (list == null || list.size() == 0) {
-            MainSwitch mainSwitch = MainSwitch.builder().dataMigrationSwitch(false)
-                    .pinModeLogicalPhysicalSwitch(false).pinModeLogicalSwitch(false)
-                    .pinModePhysicalSwitch(false).build();
+            MainSwitch mainSwitch = new MainSwitch();
+            mainSwitch.setDataMigrationSwitch(false);
+            mainSwitch.setPinModeLogicalPhysicalSwitch(false);
+            mainSwitch.setPinModeLogicalSwitch(false);
+            mainSwitch.setPinModePhysicalSwitch(false);
+
             MainSwitch mainSwitchSave = mainSwitchService.save(mainSwitch);
 
             boolean migrateData = migrateData();

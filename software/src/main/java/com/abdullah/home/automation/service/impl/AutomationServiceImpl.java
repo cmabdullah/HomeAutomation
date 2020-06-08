@@ -13,15 +13,14 @@ import com.abdullah.home.automation.registry.SwitchCentralRegistry;
 import com.abdullah.home.automation.service.AutomationService;
 import com.abdullah.home.automation.service.SwitchService;
 import com.abdullah.home.automation.utlity.Util;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-@Slf4j
 @Service
 public class AutomationServiceImpl implements AutomationService {
-
 
     private final PhysicalSwitchRegistry physicalSwitchRegistry;
 
@@ -30,6 +29,8 @@ public class AutomationServiceImpl implements AutomationService {
     private final LogicalSwitchRegistry logicalSwitchRegistry;
 
     private final SwitchService switchService;
+
+    private static final Logger log = LoggerFactory.getLogger(AutomationServiceImpl.class);
 
     @Autowired
     public AutomationServiceImpl(PhysicalSwitchRegistry physicalSwitchRegistry,

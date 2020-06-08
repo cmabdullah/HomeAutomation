@@ -9,18 +9,20 @@ import com.abdullah.home.automation.exception.ApiError;
 import com.abdullah.home.automation.exception.ApiMessage;
 import com.abdullah.home.automation.registry.DBSwitchRegistry;
 import com.abdullah.home.automation.service.SwitchService;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
-@Slf4j
 @Service
 public class DBSwitchRegistryImpl implements DBSwitchRegistry {
 
     private final SwitchService switchService;
+
+    private static final Logger log = LoggerFactory.getLogger(DBSwitchRegistryImpl.class);
 
     @Autowired
     public DBSwitchRegistryImpl(SwitchService switchService) {

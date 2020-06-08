@@ -6,7 +6,8 @@ import com.abdullah.home.automation.dto.response.StationsResponseDto;
 import com.abdullah.home.automation.repository.StationRepository;
 import com.abdullah.home.automation.service.FavoriteService;
 import com.abdullah.home.automation.service.StationService;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -20,13 +21,14 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 public class StationServiceImpl implements StationService {
 
 
     private final StationRepository stationRepository;
     private final FavoriteService favoriteService;
+
+    private static final Logger log = LoggerFactory.getLogger(StationServiceImpl.class);
 
     @Autowired
     public StationServiceImpl(StationRepository stationRepository

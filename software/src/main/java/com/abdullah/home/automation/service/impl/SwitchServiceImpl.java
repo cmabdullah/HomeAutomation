@@ -4,6 +4,8 @@ import com.abdullah.home.automation.domain.Switch;
 import com.abdullah.home.automation.registry.SwitchCentralRegistry;
 import com.abdullah.home.automation.repository.SwitchRepository;
 import com.abdullah.home.automation.service.SwitchService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,8 @@ import java.util.stream.Collectors;
 public class SwitchServiceImpl implements SwitchService {
 
     private final SwitchRepository switchRepository;
+
+    private static final Logger log = LoggerFactory.getLogger(SwitchServiceImpl.class);
 
     @Autowired
     public SwitchServiceImpl(SwitchRepository switchRepository){

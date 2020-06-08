@@ -10,6 +10,8 @@ import com.abdullah.home.automation.dto.response.Payload2;
 import com.abdullah.home.automation.dto.meteostat.WeatherData;
 import com.abdullah.home.automation.repository.PayloadRepository;
 import com.abdullah.home.automation.service.PayloadService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,8 @@ import org.springframework.stereotype.Service;
 public class PayloadServiceImpl implements PayloadService {
 
 	public final PayloadRepository payloadRepository;
+
+	private static final Logger log = LoggerFactory.getLogger(PayloadServiceImpl.class);
 
 	@Autowired
 	public PayloadServiceImpl(PayloadRepository payloadRepository){

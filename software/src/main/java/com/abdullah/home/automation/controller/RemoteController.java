@@ -10,7 +10,8 @@ import com.abdullah.home.automation.dto.response.WeatherResponseDto;
 import com.abdullah.home.automation.service.FavoriteService;
 import com.abdullah.home.automation.service.WeatherService;
 import com.abdullah.home.automation.dto.request.FilterDto;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -19,13 +20,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-@Slf4j
 @Controller
 public class RemoteController {
 
     private final WeatherService weatherService;
 
     private final FavoriteService favoriteService;
+
+    private static final Logger log = LoggerFactory.getLogger(RemoteController.class);
 
     @Autowired
     RemoteController(WeatherService weatherService, FavoriteService favoriteService) {

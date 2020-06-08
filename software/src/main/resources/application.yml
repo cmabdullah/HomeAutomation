@@ -16,7 +16,7 @@ spring:
 
 # Set here configurations for the database connection
   datasource:
-    url: jdbc:mysql://localhost:3306/ha?allowPublicKeyRetrieval=true&useSSL=false
+    url: jdbc:mysql://192.168.0.2:3306/ha?allowPublicKeyRetrieval=true&useSSL=false
     username: root
     password: rootcm
     testWhileIdle: true
