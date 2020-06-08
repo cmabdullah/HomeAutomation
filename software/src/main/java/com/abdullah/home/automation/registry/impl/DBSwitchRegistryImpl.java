@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class DBSwitchRegistryImpl implements DBSwitchRegistry {
@@ -51,9 +52,18 @@ public class DBSwitchRegistryImpl implements DBSwitchRegistry {
     @Override
     public SwitchInfo getPhysicalOrLogicalSwitchInfo(SwitchName switchName, SwitchType switchType) {
 
-        return switchService.findBySwitchName(switchName.getValue()).stream()
-                .filter(Objects::nonNull).map(sw -> buildSwitchInfo(sw, switchType)).findAny()
-                .orElseThrow(ApiError.createSingletonSupplier(ApiMessage.SWITCH_NOT_FOUND, HttpStatus.EXPECTATION_FAILED));
+        Optional<Switch> switchOptional = switchService.findBySwitchName(switchName.getValue());
+
+
+        if (switchOptional.isPresent()){
+            Switch switchObject = switchOptional.get();
+            return buildSwitchInfo(switchObject, switchType);
+        }else {
+            throw new ApiError(ApiMessage.SWITCH_NOT_FOUND, HttpStatus.EXPECTATION_FAILED);
+        }
+//        return switchService.findBySwitchName(switchName.getValue()).stream()
+//                .filter(Objects::nonNull).map(sw -> buildSwitchInfo(sw, switchType)).findAny()
+//                .orElseThrow(ApiError.createSingletonSupplier(ApiMessage.SWITCH_NOT_FOUND, HttpStatus.EXPECTATION_FAILED));
     }
 
     private SwitchInfo buildSwitchInfo(Switch sw, SwitchType switchType) {

@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +27,7 @@ public class WeatherEntityServiceImpl implements WeatherEntityService {
     public List<WeatherEntity> migrateWeatherEntity() {
 
         //weatherEntityRepository.deleteAll();
-        List<WeatherEntity> weatherEntitiesList = List.of(
+        List<WeatherEntity> weatherEntitiesList = Arrays.asList(
 
                 new WeatherEntity("humidity"),
                 new WeatherEntity("temperature"),

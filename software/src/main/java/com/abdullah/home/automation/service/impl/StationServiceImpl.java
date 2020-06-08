@@ -94,7 +94,7 @@ public class StationServiceImpl implements StationService {
         List<Station> favoriteActiveStation = favoriteService.favoriteActiveStation();
 
         List<Station> filteredStations  = stations.stream().filter(Objects::nonNull)
-                .filter(n -> !removeActiveStation( n, favoriteActiveStation)).collect(Collectors.toUnmodifiableList());
+                .filter(n -> !removeActiveStation( n, favoriteActiveStation)).collect(Collectors.toList());
 
         StationsResponseDto stationsResponseDto = new StationsResponseDto();
         stationsResponseDto.setStationList(filteredStations);

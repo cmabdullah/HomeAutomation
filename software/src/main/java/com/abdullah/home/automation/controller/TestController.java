@@ -1,6 +1,6 @@
 package com.abdullah.home.automation.controller;
 
-import com.abdullah.home.automation.hardware.service.CustomHardwareService;
+//import com.abdullah.home.automation.hardware.service.CustomHardwareService;
 import com.abdullah.home.automation.service.MainSwitchService;
 import com.abdullah.home.automation.service.StationService;
 import com.abdullah.home.automation.service.SwitchService;
@@ -23,7 +23,7 @@ public class TestController {
 
     private static final Logger log = LoggerFactory.getLogger(TestController.class);
 
-    private CustomHardwareService customHardwareService = new CustomHardwareService();
+//    private CustomHardwareService customHardwareService = new CustomHardwareService();
 
     @Autowired
     public TestController(StationService stationService,
@@ -45,17 +45,17 @@ public class TestController {
         return "regulator";
     }
 
-    @ResponseBody
-    @GetMapping("/customHardware")
-    public boolean data() {
-        log.debug("land");
-        try {
-            boolean customHardware = customHardwareService.get();
-            log.debug("customHardware : "+ customHardware);
-            return customHardwareService.get();
-        }catch (Exception e){
-            return false;
-        }
-    }
+//    @ResponseBody
+//    @GetMapping("/customHardware")
+//    public boolean data() {
+//        log.debug("land");
+//        try {
+//            boolean customHardware = customHardwareService.get();
+//            log.debug("customHardware : "+ customHardware);
+//            return customHardwareService.get();
+//        }catch (Exception e){
+//            return false;
+//        }
+//    }
 
 }

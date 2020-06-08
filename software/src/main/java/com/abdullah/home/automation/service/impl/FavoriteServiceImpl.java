@@ -46,11 +46,11 @@ public class FavoriteServiceImpl implements FavoriteService {
         station.ifPresent(st -> {
             Optional<Favorite> exist = favoriteRepository.findByStationId(stationId);
 
-            if (exist.isEmpty()) {
+            if (!exist.isPresent()) {
                 Favorite favorite = favoriteRepository.save(new Favorite(st, true));
                 log.debug("favorite saved : " + favorite.toString());
             } else {
-                if (exist.get().isActive() == false) {
+                if (!exist.get().isActive()) {
                     Favorite fev = exist.get();
                     fev.setActive(true);
                     Favorite favorite = favoriteRepository.save(fev);
@@ -67,7 +67,7 @@ public class FavoriteServiceImpl implements FavoriteService {
         station.ifPresent(st -> {
             Optional<Favorite> exist = favoriteRepository.findByStationId(stationId);
 
-            if (!exist.isEmpty()) {
+            if (exist.isPresent()) {
                 Favorite fev = exist.get();
                 fev.setActive(false);
                 Favorite favorite = favoriteRepository.save(fev);
@@ -107,7 +107,7 @@ public class FavoriteServiceImpl implements FavoriteService {
         List<Favorite> list = (List<Favorite>) favoriteRepository.findAll();
 
         List<WeatherEntity> weatherEntityList = weatherEntityService.findAll();
-        List<String> payloadTypes = weatherEntityList.stream().filter(Objects::nonNull).map(WeatherEntity::getEntityName).collect(Collectors.toUnmodifiableList());
+        List<String> payloadTypes = weatherEntityList.stream().filter(Objects::nonNull).map(WeatherEntity::getEntityName).collect(Collectors.toList());
 
         List<String> favoriteStations= list.stream().filter(Objects::nonNull)
                 .filter(Favorite::isActive)

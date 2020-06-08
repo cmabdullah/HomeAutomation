@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -32,8 +33,8 @@ public class SwitchServiceImpl implements SwitchService {
         //delete old data -> not implemented yet
         switchRepository.deleteAll();
 
-        List<Switch> switches = List.of(new Switch("light1", 0.0, 0,0,0),
-                new Switch("fan1", 0.0, 0,0,0));
+        List<Switch> switches = Arrays.asList(new Switch("light1", 0.0, 0, 0, 0),
+                new Switch("fan1", 0.0, 0, 0, 0));
         List<Switch> switchesList = (List<Switch>) switchRepository.saveAll(switches);
 
         SwitchCentralRegistry.centralSwitchMap = listToMapConverter(switchesList);

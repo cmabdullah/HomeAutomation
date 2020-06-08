@@ -26,16 +26,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -120,7 +117,7 @@ public class WeatherServiceImpl implements WeatherService {
 
         List<Payload2> payload2List;
 
-        List<String> strList = List.of(filterDto.getNamePath().split("\\s+"));
+        List<String> strList = Arrays.asList(filterDto.getNamePath().split("\\s+"));
         String station = strList.get(0);
         String timeZone = strList.get(strList.size() - 1);
         String filterDate = targetDate.toString().substring(0, 7);

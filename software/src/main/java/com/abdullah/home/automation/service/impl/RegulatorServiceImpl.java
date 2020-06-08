@@ -21,7 +21,9 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -139,7 +141,7 @@ public class RegulatorServiceImpl implements RegulatorService {
 
                 if (arr.length == 3) {
 
-                    String parsableString = List.of(arr).stream().filter(n -> n.contains("./"+Constant.REGULATOR_NAME)).findAny()
+                    String parsableString = Arrays.stream(arr).filter(Objects::nonNull).filter(n -> n.contains("./"+Constant.REGULATOR_NAME)).findAny()
                             .orElseThrow(ApiError.createSingletonSupplier(ApiMessage.PARSABLE_STRING_NOT_FOUND, HttpStatus.EXPECTATION_FAILED));
 
                     log.info("parsableString is : " + parsableString);
