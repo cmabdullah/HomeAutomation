@@ -110,4 +110,12 @@ public class HardwareServiceImpl implements HardwareService {
 
         return true;
     }
+
+
+    @Override
+    public boolean mainSwitchConfig(boolean pinModeLogicalSwitch, boolean pinModePhysicalSwitch) {
+
+        HardwareMainSwitchRegistry.hardwareMainSwitch = new HardwareMainSwitch(pinModeLogicalSwitch,pinModePhysicalSwitch);
+        return HardwareMainSwitchRegistry.getHardwareMainSwitch() != null;
+    }
 }

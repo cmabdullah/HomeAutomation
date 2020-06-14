@@ -1,6 +1,7 @@
 package com.abdullah.home.automation.controller;
 
 //import com.abdullah.home.automation.hardware.service.CustomHardwareService;
+import com.abdullah.home.automation.config.HardwareConfig;
 import com.abdullah.home.automation.service.MainSwitchService;
 import com.abdullah.home.automation.service.StationService;
 import com.abdullah.home.automation.service.SwitchService;
@@ -43,6 +44,12 @@ public class TestController {
         int regulatorParam = 10;
         model.addAttribute("regulatorParam", regulatorParam);
         return "regulator";
+    }
+
+    @ResponseBody
+    @GetMapping("/hardwareMode")
+    String hardware() {
+        return HardwareConfig.getInstance().getHardwareMode();
     }
 
 //    @ResponseBody

@@ -6,10 +6,7 @@ import com.abdullah.home.automation.domain.Switch;
 import com.abdullah.home.automation.dto.request.SwitchInfo;
 import com.abdullah.home.automation.exception.ApiError;
 import com.abdullah.home.automation.exception.ApiMessage;
-import com.abdullah.home.automation.registry.LogicalSwitchRegistry;
-import com.abdullah.home.automation.registry.PhysicalSwitchRegistry;
-import com.abdullah.home.automation.registry.PiSwitchRegistry;
-import com.abdullah.home.automation.registry.SwitchCentralRegistry;
+import com.abdullah.home.automation.registry.*;
 import com.abdullah.home.automation.service.AutomationService;
 import com.abdullah.home.automation.service.SwitchService;
 import com.abdullah.home.automation.utlity.Util;
@@ -30,17 +27,20 @@ public class AutomationServiceImpl implements AutomationService {
 
     private final SwitchService switchService;
 
+    private final HardwareRegistry hardwareRegistry;
+
     private static final Logger log = LoggerFactory.getLogger(AutomationServiceImpl.class);
 
     @Autowired
     public AutomationServiceImpl(PhysicalSwitchRegistry physicalSwitchRegistry,
                           PiSwitchRegistry piSwitchRegistry,
                           LogicalSwitchRegistry logicalSwitchRegistry,
-                          SwitchService switchService){
+                          SwitchService switchService, HardwareRegistry hardwareRegistry){
         this.physicalSwitchRegistry = physicalSwitchRegistry;
         this.piSwitchRegistry = piSwitchRegistry;
         this.logicalSwitchRegistry = logicalSwitchRegistry;
         this.switchService = switchService;
+        this.hardwareRegistry = hardwareRegistry;
     }
 
     @Override
@@ -191,12 +191,25 @@ public class AutomationServiceImpl implements AutomationService {
 
     private Switch saveSwitchInfo(Switch switchInfo,Switch switchDeepCopy) {
 
-        //need to sync, will complete later
-        Switch updatedSwitch = switchService.save(switchInfo);
+        log.debug("switch info going to save"+ switchInfo.toString());
 
-        SwitchCentralRegistry.centralSwitchMap.put(updatedSwitch.getSwitchName(), updatedSwitch);
+        //call hardware service
+        boolean hardwareState = hardwareRegistry.save(switchInfo);
 
-        return updatedSwitch;
+        if (hardwareState){
+            try{
+            //need to sync, will complete later
+            Switch updatedSwitch = switchService.save(switchInfo);
+            SwitchCentralRegistry.centralSwitchMap.put(updatedSwitch.getSwitchName(), updatedSwitch);
+                return updatedSwitch;
+            }catch (Exception e){
+                Switch updatedSwitch = switchService.save(switchDeepCopy);
+                SwitchCentralRegistry.centralSwitchMap.put(updatedSwitch.getSwitchName(), updatedSwitch);
+                throw new ApiError(ApiMessage.DB_SYNC_ERROR, HttpStatus.NOT_FOUND);
+            }
+        }else{
+            throw new ApiError(ApiMessage.HARDWARE_PROFILE_NOTSET_ERROR, HttpStatus.NOT_FOUND);
+        }
     }
 
     private Switch switchInfo(String switchName){

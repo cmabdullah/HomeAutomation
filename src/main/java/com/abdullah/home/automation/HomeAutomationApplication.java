@@ -1,6 +1,8 @@
 package com.abdullah.home.automation;
 
+import com.abdullah.home.automation.config.HardwareConfig;
 import com.abdullah.home.automation.domain.MainSwitch;
+import com.abdullah.home.automation.registry.HardwareRegistry;
 import com.abdullah.home.automation.registry.SwitchCentralRegistry;
 import com.abdullah.home.automation.service.*;
 import org.slf4j.Logger;
@@ -16,13 +18,16 @@ public class HomeAutomationApplication implements CommandLineRunner {
 
 	private final SwitchService switchService;
 	private final DataMigrationService dataMigrationService;
+	private final HardwareRegistry hardwareRegistry;
 
 	private static final Logger log = LoggerFactory.getLogger(HomeAutomationApplication.class);
 
 	@Autowired
-	public HomeAutomationApplication(SwitchService switchService,DataMigrationService dataMigrationService) {
+	public HomeAutomationApplication(SwitchService switchService,DataMigrationService dataMigrationService,
+									 HardwareRegistry hardwareRegistry) {
 		this.switchService = switchService;
 		this.dataMigrationService = dataMigrationService;
+		this.hardwareRegistry = hardwareRegistry;
 	}
 
 	public static void main(String[] args) {
@@ -34,5 +39,11 @@ public class HomeAutomationApplication implements CommandLineRunner {
 		SwitchCentralRegistry.centralSwitchMap = switchService.findAllSwitchMap();
 		MainSwitch mainSwitch = dataMigrationService.getMainSwitchState();
 		log.debug("Current state "+ mainSwitch);
+
+		HardwareConfig hardwareConfig = HardwareConfig.getInstance();
+		log.debug("hardwareMode : "+ hardwareConfig.getHardwareMode());
+		boolean piConfig = hardwareRegistry.hardwareConfig();
+		log.debug("pi hardware config : "+ piConfig);
+
 	}
 }

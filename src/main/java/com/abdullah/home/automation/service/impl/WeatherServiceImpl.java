@@ -13,6 +13,7 @@ import com.abdullah.home.automation.dto.response.Payload2;
 import com.abdullah.home.automation.dto.response.WeatherResponseDto;
 import com.abdullah.home.automation.exception.ApiError;
 import com.abdullah.home.automation.exception.ApiMessage;
+import com.abdullah.home.automation.config.WeatherStationApiConfig;
 import com.abdullah.home.automation.service.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -159,9 +160,9 @@ public class WeatherServiceImpl implements WeatherService {
         if (payloads.size() == 24) {
             return convertPayloadToPayload2(payloads);
         }
-
-        String quoteUrl = "https://api.meteostat.net/v1/history/hourly?station=" + station + "&start="
-                + firstDayOfMonth + "&end=" + targetDate + "&time_zone=" + timeZone + "&time_format=Y-m-d%20H:i&key=qcca1JKR";
+        WeatherStationApiConfig weatherStationApiConfig = WeatherStationApiConfig.getInstance();
+        String quoteUrl = weatherStationApiConfig.getBaseUrl() + station + "&start="
+                + firstDayOfMonth + "&end=" + targetDate + "&time_zone=" + timeZone + "&time_format=Y-m-d%20H:i&key="+weatherStationApiConfig.getApiKey();
         //new key ySq5y6RG
 
         //return dataset [api response]

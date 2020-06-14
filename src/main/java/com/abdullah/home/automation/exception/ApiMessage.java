@@ -18,4 +18,6 @@ public class ApiMessage {
     public static final String IO_ERROR_WHILE_NETWORK_CALL_TO_FETCH_DATA = "i/o error while network call to fetch data";
     public static final String INTERRUPTED_EXCEPTION_WHILE_NETWORK_CALL_TO_FETCH_DATA = "interrupted exception while network call to fetch data";
     public static final String IO_ERROR_WHILE_PROCESS_STATIC_DATA = "i/o error while process static data";
+    public static final String DB_SYNC_ERROR = "database sync error";
+    public static final String HARDWARE_PROFILE_NOTSET_ERROR = "hardware profile not set error";
 }
