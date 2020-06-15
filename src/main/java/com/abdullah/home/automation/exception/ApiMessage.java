@@ -20,4 +20,6 @@ public class ApiMessage {
     public static final String IO_ERROR_WHILE_PROCESS_STATIC_DATA = "i/o error while process static data";
     public static final String DB_SYNC_ERROR = "database sync error";
     public static final String HARDWARE_PROFILE_NOTSET_ERROR = "hardware profile not set error";
+    public static final String STATION_SEARCH_KEYWORD_CANNOT_BE_EMPTY = "station search keyword cannot be empty";
+    public static final String WEATHER_INFORMATION_SEARCH_INPUT_VALIDATION_ERROR = "weather information search input validation error";
 }

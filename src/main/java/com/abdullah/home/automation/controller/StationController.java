@@ -37,6 +37,7 @@ public class StationController {
     @PostMapping("/stations")
     String stationsPost(Model model, String keyword) {
         //need to filter from existing data
+        log.info("keyword "+ keyword);
         if (keyword == null || keyword.isEmpty()){
             return "redirect:/stations";
         }
