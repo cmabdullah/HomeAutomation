@@ -29,8 +29,6 @@ int processId = 0;
 
 void readDimValueFromTextFile(void);
 string convertToString(char *a, int size);
- 
-
 void * ProcessorMajorTask(void *threadid);
 void *Remote(void *threadid);
 
@@ -69,7 +67,7 @@ void *Remote(void *threadid) {
 
 void *SocketCall(void *threadid) {
   long tid;
-  int j = 0;
+
   tid = (long)threadid;
   cout << "\nHello SocketCall ! Thread ID, " << tid << endl;
 
@@ -89,7 +87,7 @@ void *SocketCall(void *threadid) {
   bind(clintListn, (struct sockaddr *)&ipOfServer, sizeof(ipOfServer));
   listen(clintListn, 20);
 
-  int n = 0, k, connfd = 0, l = 0;
+  int   connfd = 0, l = 0;
   char recvBuff[1024];
 
   while (1) {
@@ -187,10 +185,14 @@ void *SocketCall(void *threadid) {
     cout <<"cm " <<cma << endl;
         clock = time(NULL);
 
+        const char* s = cma.c_str();
+
+        printf("res %s", s);
+
 
 //ctime(&clock)
 //&cma
-    snprintf(dataSending, sizeof(dataSending), "%.24s\r\n", &messageState);  // Printing successful message
+    snprintf(dataSending, sizeof(dataSending), "%s\n", s);  // Printing successful message
     write(clintConnt, dataSending, strlen(dataSending));
 
     close(clintConnt);
@@ -270,6 +272,10 @@ int main() {
     std::cout << "\nSCHED_FIFO OK\n\n" << std::endl;
   }
 
+  while(1){
+    //delay(1);
+  }
+
   pthread_exit(NULL);
 }
 
@@ -297,6 +303,3 @@ void readDimValueFromTextFile(void) {
     printf("agter read from file dim new value is:  %d\n", dim);
   }
 }
-
-// g++ -o a.out concurrentCmSCHED_RR.cpp && ./a.out
-// g++ -o a.out concurrentCmSCHED_RR.cpp -lpthread && ./a.out
