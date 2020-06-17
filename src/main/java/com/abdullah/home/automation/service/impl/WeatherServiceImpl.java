@@ -53,15 +53,18 @@ public class WeatherServiceImpl implements WeatherService {
 
     private final WeatherEntityService weatherEntityService;
 
+    private final WeatherStationApiConfig weatherStationApiConfig;
+
     private static final Logger log = LoggerFactory.getLogger(WeatherServiceImpl.class);
 
     @Autowired
     public WeatherServiceImpl(PayloadService payloadService, StationService stationService, MonthlyDataService monthlyDataService,
-                       WeatherEntityService weatherEntityService) {
+                       WeatherEntityService weatherEntityService, WeatherStationApiConfig weatherStationApiConfig) {
         this.payloadService = payloadService;
         this.stationService = stationService;
         this.monthlyDataService = monthlyDataService;
         this.weatherEntityService = weatherEntityService;
+        this.weatherStationApiConfig = weatherStationApiConfig;
     }
 
     private static String basePath = System.getProperty("user.dir");
@@ -160,7 +163,7 @@ public class WeatherServiceImpl implements WeatherService {
         if (payloads.size() == 24) {
             return convertPayloadToPayload2(payloads);
         }
-        WeatherStationApiConfig weatherStationApiConfig = WeatherStationApiConfig.getInstance();
+
         String quoteUrl = weatherStationApiConfig.getBaseUrl() + station + "&start="
                 + firstDayOfMonth + "&end=" + targetDate + "&time_zone=" + timeZone + "&time_format=Y-m-d%20H:i&key="+weatherStationApiConfig.getApiKey();
         //new key ySq5y6RG

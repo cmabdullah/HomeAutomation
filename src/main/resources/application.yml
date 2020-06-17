@@ -68,3 +68,15 @@ management:
 #    encoding: @project.build.sourceEncoding@
 #    java:
 #      version: @java.version@
+regulator:
+  mode: VoltageRegulatorFinalShape
+#  mode: Regulator
+
+hardware:
+  hardwareMode: without-hardware
+
+  #without-hardware
+  #with-hardware
+meteostat:
+  baseUrl: https://api.meteostat.net/v1/history/hourly?station=
+  apiKey: qcca1JKR
