@@ -1,6 +1,5 @@
 package com.abdullah.home.automation;
 
-import com.abdullah.home.automation.config.HardwareConfig;
 import com.abdullah.home.automation.domain.MainSwitch;
 import com.abdullah.home.automation.registry.HardwareRegistry;
 import com.abdullah.home.automation.registry.SwitchCentralRegistry;
@@ -40,8 +39,6 @@ public class HomeAutomationApplication implements CommandLineRunner {
 		MainSwitch mainSwitch = dataMigrationService.getMainSwitchState();
 		log.debug("Current state "+ mainSwitch);
 
-		HardwareConfig hardwareConfig = HardwareConfig.getInstance();
-		log.debug("hardwareMode : "+ hardwareConfig.getHardwareMode());
 		boolean piConfig = hardwareRegistry.hardwareConfig();
 		log.debug("pi hardware config : "+ piConfig);
 

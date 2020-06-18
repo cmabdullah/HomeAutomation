@@ -46,11 +46,11 @@ public class TestController {
         return "regulator";
     }
 
-    @ResponseBody
-    @GetMapping("/hardwareMode")
-    String hardware() {
-        return HardwareConfig.getInstance().getHardwareMode();
-    }
+//    @ResponseBody
+//    @GetMapping("/hardwareMode")
+//    String hardware() {
+//        return HardwareConfig.getHardwareMode();
+//    }
 
 //    @ResponseBody
 //    @GetMapping("/customHardware")

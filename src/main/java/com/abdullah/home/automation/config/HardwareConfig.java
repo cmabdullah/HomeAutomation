@@ -1,47 +1,26 @@
 package com.abdullah.home.automation.config;
 
-import com.abdullah.home.automation.dto.config.HardwareConfigDto;
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-import java.io.File;
-import java.io.FileInputStream;
-
+@Configuration
 public class HardwareConfig {
 
+    private static final Logger log = LoggerFactory.getLogger(HardwareConfig.class);
+
+    @Value("${hardware.hardwareMode}")
     private String hardwareMode;
 
-    private HardwareConfig(String hardwareMode) {
-        this.hardwareMode = hardwareMode;
-    }
-
-    private static class Holder {
-        private static HardwareConfig instance = new HardwareConfig(loadConfig());
-    }
-
-    public static HardwareConfig getInstance() {
-        return Holder.instance;
+    @Bean
+    public void debugLog() {
+        log.debug("hardwareMode config status "+ hardwareMode);
     }
 
     public String getHardwareMode() {
         return hardwareMode;
     }
 
-    private static String loadConfig() {
-
-        try {
-            Yaml yaml = new Yaml(new Constructor(HardwareConfigDto.class));
-            File file = new File("hardwareConfig.yaml");
-            HardwareConfigDto hardwareConfigDto = yaml.load(new FileInputStream(file));
-            return hardwareConfigDto.getHardwareMode();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Hardware configuration failed");
-        }
-    }
-
-    public boolean isConfigValid() {
-
-        return hardwareMode != null;
-    }
 }
