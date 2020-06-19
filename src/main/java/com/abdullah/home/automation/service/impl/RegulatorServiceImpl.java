@@ -139,7 +139,7 @@ public class RegulatorServiceImpl implements RegulatorService {
                 String[] arr = results.split("\n");
                 log.debug("arr length : " + arr.length);
 
-                if (arr.length == 3) {
+                if (arr.length > 0) {
 
                     String parsableString = Arrays.stream(arr).filter(Objects::nonNull).filter(n -> n.contains("./"+Constant.REGULATOR_NAME)).findAny()
                             .orElseThrow(ApiError.createSingletonSupplier(ApiMessage.PARSABLE_STRING_NOT_FOUND, HttpStatus.EXPECTATION_FAILED));
