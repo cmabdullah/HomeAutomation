@@ -42,5 +42,8 @@ public class HomeAutomationApplication implements CommandLineRunner {
 		boolean piConfig = hardwareRegistry.hardwareConfig();
 		log.debug("pi hardware config : "+ piConfig);
 
+		boolean sensorConfig = hardwareRegistry.sensorConfig();
+		log.debug("pi sensorConfig config : "+ sensorConfig);
+
 	}
 }

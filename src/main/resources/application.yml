@@ -70,7 +70,7 @@ management:
 #      version: @java.version@
 regulator:
   mode: VoltageRegulatorFinalShape
-#  mode: Regulator
+#  mode: Regulator2
 
 hardware:
   hardwareMode: without-hardware

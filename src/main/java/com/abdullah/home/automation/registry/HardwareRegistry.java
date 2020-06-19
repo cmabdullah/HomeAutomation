@@ -6,4 +6,5 @@ public interface HardwareRegistry {
 
     boolean save(Switch switchInfo);
     boolean hardwareConfig();
+    boolean sensorConfig();
 }
