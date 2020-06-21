@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class HardwareRegistryImpl implements HardwareRegistry {
 
@@ -67,9 +65,9 @@ public class HardwareRegistryImpl implements HardwareRegistry {
 
         if (devProfile.equals("with-hardware")) {
 
-            List<Thread> sensorStatus = sensorContext.runAllWeatherSensor();
-            log.debug("sensor thread size -> "+ sensorStatus.size());
-            return sensorStatus.size() != 0;
+            boolean sensorStatus = sensorContext.runAllWeatherSensor();
+            log.debug("sensor thread size -> "+ sensorStatus);
+            return sensorStatus;
         } else if (devProfile.equals("without-hardware")) {
             log.warn("Hardware sensors not connected");
             return false;

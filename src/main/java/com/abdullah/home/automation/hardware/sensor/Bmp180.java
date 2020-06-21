@@ -121,8 +121,6 @@ public class Bmp180 extends Thread {
             }catch (InterruptedException e){
                 System.out.println(e.getLocalizedMessage());
             }
-
-
         }
     }
 }

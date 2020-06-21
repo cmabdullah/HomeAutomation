@@ -1,19 +1,22 @@
 package com.abdullah.home.automation.hardware.sensor;
 
+import com.abdullah.home.automation.config.Mqtt;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 class SensorReader extends Thread {
 
     private static final Logger log = LoggerFactory.getLogger(SensorReader.class);
 
-    private DHT22 dht22Indoor = null;
-    private DHT22 dht22OutDoor = null;
     private Bmp180 bmp180 = null;
 
-    public SensorReader(DHT22 dht22Indoor, DHT22 dht22OutDoor, Bmp180 bmp180) {
-        this.dht22Indoor = dht22Indoor;
-        this.dht22OutDoor = dht22OutDoor;
+    public SensorReader(Bmp180 bmp180) {
+
         this.bmp180 = bmp180;
     }
 
@@ -23,15 +26,27 @@ class SensorReader extends Thread {
         while (true) {
 
             try {
+
+                LocalDateTime localDateTime = LocalDateTime.now();
+                Instant instant = localDateTime.atZone(ZoneId.of("Asia/Dhaka")).toInstant();
+                long timeInMillis = instant.toEpochMilli();
+                String message = "OutdoorBmp180 Temp="+ String.format("%.1f", bmp180.getActualTemperature())+
+                        "  Pressure="+String.format("%.1f", bmp180.getActualPressure())+
+                        " Altitude="+ String.format("%.1f", bmp180.getAltitude())+" PublishTime="+ timeInMillis;
+                log.debug(message);
+
+                MqttMessage mqttMessage = new MqttMessage(message.getBytes());
+                mqttMessage.setQos(1);
+                mqttMessage.setRetained(true);
+
+                Mqtt.getInstance().publish("weather", mqttMessage);
+
                 Thread.sleep(2500);
             } catch (InterruptedException e) {
                 log.error(e.getLocalizedMessage());
+            } catch (Exception e){
+                log.error("Bmp/mqtt error "+ e.getLocalizedMessage());
             }
-
-            log.debug("Indoor " + "Temperature " + dht22Indoor.getTemperature() + " Humidity " + dht22Indoor.getHumidity() + " counter : " + dht22Indoor.getCounter());
-            log.debug("OutDoor " + "Temperature " + dht22OutDoor.getTemperature() + " Humidity " + dht22OutDoor.getHumidity() + " counter : " + dht22OutDoor.getCounter());
-            log.debug("OutDoor " + "Temperature " + bmp180.getActualTemperature() + " Pressure " + bmp180.getActualPressure() + " Altitude " + bmp180.getAltitude() + " counter : " + dht22OutDoor.getCounter());
-
         }
     }
 }
