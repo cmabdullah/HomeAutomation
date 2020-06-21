@@ -17,54 +17,60 @@ public class SensorReading {
     private float humidity;
     private float pressure;
     private float altitude;
-    private double publishTime;
+    private long publishTime;
 
     public String getSensorName() {
         return sensorName;
     }
 
-    public void setSensorName(String sensorName) {
+    public SensorReading setSensorName(String sensorName) {
         this.sensorName = sensorName;
+        return this;
     }
 
     public float getTemperature() {
         return temperature;
     }
 
-    public void setTemperature(float temperature) {
+    public SensorReading setTemperature(float temperature) {
         this.temperature = temperature;
+        return this;
     }
 
     public float getHumidity() {
         return humidity;
     }
 
-    public void setHumidity(float humidity) {
+    public SensorReading setHumidity(float humidity) {
         this.humidity = humidity;
+        return this;
     }
 
     public float getPressure() {
         return pressure;
     }
 
-    public void setPressure(float pressure) {
+    public SensorReading setPressure(float pressure) {
         this.pressure = pressure;
+        return this;
     }
 
     public float getAltitude() {
         return altitude;
     }
 
-    public void setAltitude(float altitude) {
+    public SensorReading setAltitude(float altitude) {
         this.altitude = altitude;
+        return this;
     }
 
     public double getPublishTime() {
         return publishTime;
     }
 
-    public void setPublishTime(double publishTime) {
+    public SensorReading setPublishTime(long publishTime) {
         this.publishTime = publishTime;
+        return this;
     }
 
     @Override

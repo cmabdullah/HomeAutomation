@@ -5,6 +5,10 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
 class SensorReader extends Thread {
 
     private static final Logger log = LoggerFactory.getLogger(SensorReader.class);
@@ -23,7 +27,12 @@ class SensorReader extends Thread {
 
             try {
 
-                String message = "Outdoor Temp="+ String.format("%.1f", bmp180.getActualTemperature())+"*C  Pressure="+String.format("%.1f", bmp180.getActualPressure())+" Altitude "+ String.format("%.1f", bmp180.getAltitude());
+                LocalDateTime localDateTime = LocalDateTime.now();
+                Instant instant = localDateTime.atZone(ZoneId.of("Asia/Dhaka")).toInstant();
+                long timeInMillis = instant.toEpochMilli();
+                String message = "OutdoorBmp180 Temp="+ String.format("%.1f", bmp180.getActualTemperature())+
+                        "  Pressure="+String.format("%.1f", bmp180.getActualPressure())+
+                        " Altitude="+ String.format("%.1f", bmp180.getAltitude())+" PublishTime="+ timeInMillis;
                 log.debug(message);
 
                 MqttMessage mqttMessage = new MqttMessage(message.getBytes());

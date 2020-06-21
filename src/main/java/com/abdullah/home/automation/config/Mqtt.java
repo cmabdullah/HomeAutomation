@@ -1,5 +1,6 @@
 package com.abdullah.home.automation.config;
 
+import com.abdullah.home.automation.constants.Constant;
 import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -11,15 +12,12 @@ public class Mqtt {
 
     private static final Logger log = LoggerFactory.getLogger(Mqtt.class);
 
-
-    private static final String MQTT_PUBLISHER_ID = "spring-server";
-    private static final String MQTT_SERVER_ADDRES= "tcp://127.0.0.1:1883";
     private static IMqttClient instance;
 
     public static IMqttClient getInstance() {
         try {
             if (instance == null) {
-                instance = new MqttClient(MQTT_SERVER_ADDRES, MQTT_PUBLISHER_ID);
+                instance = new MqttClient(Constant.MQTT_SERVER_ADDRESS, Constant.MQTT_PUBLISHER_ID);
             }
 
             MqttConnectOptions options = new MqttConnectOptions();
