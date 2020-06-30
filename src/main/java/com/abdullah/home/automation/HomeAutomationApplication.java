@@ -15,35 +15,35 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class HomeAutomationApplication implements CommandLineRunner {
 
-	private final SwitchService switchService;
-	private final DataMigrationService dataMigrationService;
-	private final HardwareRegistry hardwareRegistry;
+    private final SwitchService switchService;
+    private final DataMigrationService dataMigrationService;
+    private final HardwareRegistry hardwareRegistry;
 
-	private static final Logger log = LoggerFactory.getLogger(HomeAutomationApplication.class);
+    private static final Logger log = LoggerFactory.getLogger(HomeAutomationApplication.class);
 
-	@Autowired
-	public HomeAutomationApplication(SwitchService switchService,DataMigrationService dataMigrationService,
-									 HardwareRegistry hardwareRegistry) {
-		this.switchService = switchService;
-		this.dataMigrationService = dataMigrationService;
-		this.hardwareRegistry = hardwareRegistry;
-	}
+    @Autowired
+    public HomeAutomationApplication(SwitchService switchService, DataMigrationService dataMigrationService,
+                                     HardwareRegistry hardwareRegistry) {
+        this.switchService = switchService;
+        this.dataMigrationService = dataMigrationService;
+        this.hardwareRegistry = hardwareRegistry;
+    }
 
-	public static void main(String[] args) {
-		SpringApplication.run(HomeAutomationApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(HomeAutomationApplication.class, args);
+    }
 
-	@Override
-	public void run(String... args) {
-		SwitchCentralRegistry.centralSwitchMap = switchService.findAllSwitchMap();
-		MainSwitch mainSwitch = dataMigrationService.getMainSwitchState();
-		log.debug("Current state "+ mainSwitch);
+    @Override
+    public void run(String... args) {
+        SwitchCentralRegistry.centralSwitchMap = switchService.findAllSwitchMap();
+        MainSwitch mainSwitch = dataMigrationService.getMainSwitchState();
+        log.debug("Current state " + mainSwitch);
 
-		boolean piConfig = hardwareRegistry.hardwareConfig();
-		log.debug("pi hardware config : "+ piConfig);
+        boolean piConfig = hardwareRegistry.hardwareConfig();
+        log.debug("pi hardware config : " + piConfig);
 
-		boolean sensorConfig = hardwareRegistry.sensorConfig();
-		log.debug("pi sensorConfig config : "+ sensorConfig);
+        boolean sensorConfig = hardwareRegistry.sensorConfig();
+        log.debug("pi sensorConfig config : " + sensorConfig);
 
-	}
+    }
 }

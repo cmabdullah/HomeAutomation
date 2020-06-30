@@ -1,5 +1,6 @@
 package com.abdullah.home.automation.registry.impl;
 
+import com.abdullah.home.automation.config.Subscriber;
 import com.abdullah.home.automation.domain.Switch;
 import com.abdullah.home.automation.hardware.sensor.SensorContext;
 import com.abdullah.home.automation.hardware.service.HardwareService;
@@ -8,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,13 +20,18 @@ public class HardwareRegistryImpl implements HardwareRegistry {
 
     private final SensorContext sensorContext;
 
+    private final Subscriber subscriber;
+
     private static final Logger log = LoggerFactory.getLogger(HardwareRegistryImpl.class);
 
 
     @Autowired
-    public HardwareRegistryImpl(HardwareService hardwareService, SensorContext sensorContext) {
+    public HardwareRegistryImpl(HardwareService hardwareService, SensorContext sensorContext
+            ,Subscriber subscriber
+    ) {
         this.hardwareService = hardwareService;
         this.sensorContext = sensorContext;
+        this.subscriber = subscriber;
     }
 
     @Value("${hardware.hardwareMode}")
@@ -62,10 +70,11 @@ public class HardwareRegistryImpl implements HardwareRegistry {
 
     @Override
     public boolean sensorConfig() {
-
+        //taskExecutor().execute(subscriber);
         if (devProfile.equals("with-hardware")) {
 
             boolean sensorStatus = sensorContext.runAllWeatherSensor();
+            taskExecutor().execute(subscriber);
             log.debug("sensor thread size -> "+ sensorStatus);
             return sensorStatus;
         } else if (devProfile.equals("without-hardware")) {
@@ -73,5 +82,9 @@ public class HardwareRegistryImpl implements HardwareRegistry {
             return false;
         }
         return false;
+    }
+
+    public TaskExecutor taskExecutor() {
+        return new SimpleAsyncTaskExecutor(); // Or use another one of your liking
     }
 }

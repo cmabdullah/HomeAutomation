@@ -27,13 +27,13 @@ public class SensorContextImpl implements SensorContext {
         threadSensorReader.start();
         threadSensorReader.setName("threadSensorReader");
 
-        try {
-
-            threadOutDoorBmp.join();
-            threadSensorReader.join();
-        } catch (InterruptedException e) {
-            log.error(e.getLocalizedMessage());
-        }
+//        try {
+//
+//            threadOutDoorBmp.join();
+//            threadSensorReader.join();
+//        } catch (InterruptedException e) {
+//            log.error(e.getLocalizedMessage());
+//        }
 
         return threadOutDoorBmp.isAlive();
     }

@@ -6,6 +6,8 @@ import com.abdullah.home.automation.service.SensorReadingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SensorReadingServiceImpl implements SensorReadingService {
 
@@ -19,5 +21,10 @@ public class SensorReadingServiceImpl implements SensorReadingService {
     @Override
     public SensorReading save(SensorReading sensorReading) {
         return sensorReadingRepository.save(sensorReading);
+    }
+
+    @Override
+    public List<SensorReading> save(List<SensorReading> sensorReading) {
+        return (List<SensorReading>) sensorReadingRepository.saveAll(sensorReading);
     }
 }

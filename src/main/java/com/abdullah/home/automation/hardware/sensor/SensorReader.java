@@ -23,6 +23,15 @@ class SensorReader extends Thread {
     @Override
     public void run() {
 
+        try{
+            log.debug("SensorReader is going to sleep for a minute ");
+            Thread.sleep(60000);
+
+        }catch (InterruptedException e){
+            log.error("Sensor Initial Interrupted Exception "+e.getLocalizedMessage());
+        }
+
+
         while (true) {
 
             try {
@@ -33,7 +42,7 @@ class SensorReader extends Thread {
                 String message = "OutdoorBmp180 Temp="+ String.format("%.1f", bmp180.getActualTemperature())+
                         "  Pressure="+String.format("%.1f", bmp180.getActualPressure())+
                         " Altitude="+ String.format("%.1f", bmp180.getAltitude())+" PublishTime="+ timeInMillis;
-                log.debug(message);
+                //log.debug(message);
 
                 MqttMessage mqttMessage = new MqttMessage(message.getBytes());
                 mqttMessage.setQos(1);
