@@ -25,24 +25,26 @@ You need to ensure that Maven uses the Java JDK needed for the branch you want t
 To do so execute
 
 1. Download the Binary tar.gz version the [maven](http://maven.apache.org/download.cgi) website.Pick the latest version. 
-wget https://downloads.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz
+
+> wget https://downloads.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz
 
 2. Extract the archive to /opt.
-cd /opt && sudo tar -xzvf /path/to/apache-maven-3.6.3-bin.tar.gz
+
+> cd /opt && sudo tar -xzvf /path/to/apache-maven-3.6.3-bin.tar.gz
 
 3. Tell you shell where to find maven. We’ll do this in the system profile settings so it is available to all users.
 
-	sudo vim /etc/profile.d/maven.sh
-	and enter
+> sudo vim /etc/profile.d/maven.sh
+```bash
 	export M2_HOME=/opt/apache-maven-3.6.3
 	export "PATH=$PATH:$M2_HOME/bin"
-
+```
 Quit and save from the editor.
 
 4. Log out and back into the Raspberry Pi so the profile script takes effect and there it is. You can test that it is working with
-```bash
-	mvn -version
-```
+
+> mvn -version
+
 
 #### Git
 
