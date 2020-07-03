@@ -94,7 +94,15 @@ public class WeatherServiceImpl implements WeatherService {
         String payloadType = "";
 
         if (filterDto.getPayloadType() != null) {
-            if (weatherEntityList.get(0).getEntityName().contains(filterDto.getPayloadType())) {
+            boolean find = false;
+            for (WeatherEntity weatherEntity : weatherEntityList) {
+                if (weatherEntity.getEntityName().contains(filterDto.getPayloadType())) {
+                    find = true;
+                    break;
+                }
+            }
+
+            if (find) {
                 payloadType = filterDto.getPayloadType();
             } else {
                 payloadType = weatherEntityList.get(0).getEntityName();
