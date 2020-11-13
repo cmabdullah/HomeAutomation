@@ -48,13 +48,6 @@ public class TestController {
 
     }
 
-    @GetMapping("/regulator")
-    String regulator(Model model) {
-        int regulatorParam = 10;
-        model.addAttribute("regulatorParam", regulatorParam);
-        return "regulator";
-    }
-
     @GetMapping("/subscribe")
     public List<MqttSubscribeModel> subscribeChannel()
             throws InterruptedException, MqttException {

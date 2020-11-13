@@ -35,6 +35,33 @@ spring:
   thymeleaf:
     cache: false
 
+
+  # ===============================
+  # = MAIL CONFIG
+  # ===============================
+  mail:
+    host: smtp.gmail.com
+    username: mainulhasan3787@gmail.com
+    password: 00
+    properties:
+      mail:
+        smtp:
+          auth: true
+          socketFactory:
+            port: 465
+            class: javax.net.ssl.SSLSocketFactory
+            fallback: false
+
+
+support:
+  email: a.kyium.khan@gmail.com
+
+mail:
+  smtp:
+    starttls:
+      enable: true
+  host: smtp.gmail.com
+  
 server:
   port: 8080
 
@@ -77,6 +104,7 @@ hardware:
 
   #without-hardware
   #with-hardware
+  # mvn spring-boot:run -Dspring-boot.run.arguments="--hardware.hardwareMode=without-hardware --hardware.hardwareMode=VoltageRegulatorFinalShape"
 meteostat:
   baseUrl: https://api.meteostat.net/v1/history/hourly?station=
   apiKey: qcca1JKR

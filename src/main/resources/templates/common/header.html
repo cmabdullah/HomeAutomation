@@ -43,13 +43,17 @@
 <!--				</c:if>-->
 			</ul>
 
-			<!-- 		<ul class="nav navbar-nav navbar-right"> -->
-			<!-- 			<li><a href="/logout">Logout</a></li> -->
-			<!-- 		</ul> -->
+			<ul class="nav navbar-nav navbar-right">
+				<li><a sec:authorize="isAnonymous()" th:href="@{/login}">Login</a></li>
+<!--				<li><a sec:authorize="isAuthenticated()" th:href="@{/myProfile}">MY ACCOUNT</a></li>-->
+				<li><a sec:authorize="isAuthenticated()" th:href="@{/logout}">Logout</a></li>
+			</ul>
 		</div>
 	</nav>
 
 </div>
+
+
 
 <div th:fragment="body-bottom-scripts">
 
