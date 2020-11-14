@@ -80,7 +80,7 @@ public class AuthController {
         return "myProfile";
     }
 
-    @GetMapping("/forgetPassword")
+    @PostMapping("/forgetPassword")
     public String forgetPassword(HttpServletRequest request, @ModelAttribute("email") String email, Model model) {
 
         model.addAttribute("classActiveForgetPassword", true);
@@ -90,7 +90,7 @@ public class AuthController {
         if (!optionalUser.isPresent()) {
             model.addAttribute("emailNotExist", true);
             return "myAccount";
-        }else{
+        } else{
 
             boolean forgetPassword = authService.forgetPassword(optionalUser.get(),request);
             if (forgetPassword){

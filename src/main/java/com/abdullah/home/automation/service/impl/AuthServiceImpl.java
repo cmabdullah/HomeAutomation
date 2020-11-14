@@ -9,6 +9,8 @@ import com.abdullah.home.automation.service.UserSecurityService;
 import com.abdullah.home.automation.service.UserService;
 import com.abdullah.home.automation.utlity.MailConstructor;
 import com.abdullah.home.automation.utlity.SecurityUtility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -34,6 +36,9 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserSecurityService userSecurityService;
 
+    private static final Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
+
+
     @Autowired
     public AuthServiceImpl(JavaMailSender mailSender, MailConstructor mailConstructor,
                            UserService userService, UserSecurityService userSecurityService) {
@@ -51,7 +56,11 @@ public class AuthServiceImpl implements AuthService {
         user.setUsername(username);
         user.setEmail(userEmail);
 
-        String encryptedPassword = buildEncryptedPassword();
+        String password = SecurityUtility.randomPassword();
+        log.info("system generated password "+password);
+
+        String encryptedPassword = SecurityUtility.passwordEncoder().encode(password);
+        user.setPassword(encryptedPassword);
 
         Role role = new Role();
         role.setRoleId(1);
@@ -62,7 +71,7 @@ public class AuthServiceImpl implements AuthService {
         try {
             userService.createUser(user, userRoles);
 
-            createPasswordTokenAndSendMail(user, encryptedPassword, request);
+            createPasswordTokenAndSendMail(user, password, request);
         } catch (Exception e) {
             return false;
         }
@@ -73,24 +82,21 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public boolean forgetPassword(User user, HttpServletRequest request) {
 
-        String encryptedPassword = buildEncryptedPassword();
+        String password = SecurityUtility.randomPassword();
+        log.info("system generated password "+password);
+        String encryptedPassword = SecurityUtility.passwordEncoder().encode(password);
+
         user.setPassword(encryptedPassword);
 
         User updateInfo = userService.save(user);
 
         if (updateInfo != null) {
-            createPasswordTokenAndSendMail(user, encryptedPassword, request);
+            createPasswordTokenAndSendMail(user, password, request);
             return true;
         } else {
             return false;
         }
 
-    }
-
-    private String buildEncryptedPassword() {
-        String password = SecurityUtility.randomPassword();
-
-        return SecurityUtility.passwordEncoder().encode(password);
     }
 
     private void createPasswordTokenAndSendMail(User user, String password, HttpServletRequest request) {
