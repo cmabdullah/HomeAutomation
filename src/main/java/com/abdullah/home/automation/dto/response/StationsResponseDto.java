@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 //@Data
-public class StationsResponseDto implements Serializable {
+public class StationsResponseDto implements Serializable{
     private List<Station> stationList;
     private boolean add;
     private boolean delete;
