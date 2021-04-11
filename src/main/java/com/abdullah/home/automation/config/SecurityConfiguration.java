@@ -29,8 +29,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/newUser",
             "/forgetPassword",
             "/login",
+            "/live-temperature/**",
+            "/temp",
+            "/live-commentary",
+            "/live-comment",
+            "/stomp/**",
+            "/static/**",
+            "/publisher",
+            "/get-file",
 //            "/myAccount",
             "/fonts/**"
+    };
+
+    private static final String[] AUTH_MATCHERS = {
+            "/actuator/**",
+            "/"
     };
 
     @Override
@@ -42,7 +55,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/")
+                .antMatchers(AUTH_MATCHERS)
                 .access("hasRole('ROLE_USER')")
                 .and()
                 .formLogin().failureUrl("/login?error").defaultSuccessUrl("/")

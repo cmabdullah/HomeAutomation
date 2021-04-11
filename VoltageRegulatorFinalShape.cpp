@@ -8,7 +8,7 @@
 #include <stdio.h>   // standard input and output library
 #include <stdlib.h>  // this includes functions regarding memory allocation
 #include <string.h>  // contains string functions
-#include <errno.h>   //It defines macros for reporting and retrieving error conditions through error codes
+#include <errno.h>   //It defiprocessIdnes macros for reporting and retrieving error conditions through error codes
 #include <time.h>    //contains various functions for manipulating date and time
 #include <unistd.h>  //contains various constants
 #include <sys/types.h>   //contains a number of basic derived types that should be used whenever appropriate
@@ -224,14 +224,12 @@ int main() {
   pthread_attr_t thread_attr;
   pthread_attr_init(&thread_attr);  // Initialise the attributes
   // SCHED_FIFO is a simple scheduling algorithm without time slicing.
-  pthread_attr_setschedpolicy(&thread_attr,
-                              SCHED_FIFO);  // Set attributes to FIFO policy
+  pthread_attr_setschedpolicy(&thread_attr, SCHED_FIFO);  // Set attributes to FIFO policy
   param.sched_priority = 50;
   std::cout << "Trying to set thread realtime prio = " << param.sched_priority
             << std::endl;
 
-  ret = pthread_attr_setschedparam(&thread_attr,
-                                   &param);  // Set attributes to priority 95
+  ret = pthread_attr_setschedparam(&thread_attr, &param);  // Set attributes to priority 95
 
   if (ret != 0) {
     // Print the error
@@ -258,18 +256,20 @@ int main() {
   }
 
   // Now verify the change in thread priority
-  int policy = 0;
+  int policy = SCHED_FIFO;
   ret = pthread_getschedparam(processorThread, &policy, &param);
   if (ret != 0) {
-    std::cout << "Couldn't retrieve real-time scheduling paramers" << std::endl;
+    cout << "Couldn't retrieve real-time scheduling paramers" << endl;
   } else {
-    std::cout << "Retrieve real-time scheduling paramers success" << std::endl;
+    cout << "Retrieve real-time scheduling paramers success" << endl;
   }
+
+  cout<< "policy "<< policy << endl;
   // Check the correct policy was applied
   if (policy != SCHED_FIFO) {
-    std::cout << "\nScheduling is NOT SCHED_FIFO!\n" << std::endl;
+    cout << "\nScheduling is NOT SCHED_FIFO!\n" << endl;
   } else {
-    std::cout << "\nSCHED_FIFO OK\n\n" << std::endl;
+    cout << "\nSCHED_FIFO OK\n\n" << endl;
   }
 
   while(1){

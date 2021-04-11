@@ -15,6 +15,12 @@ If you want to build the master branch you will need a Java JDK of minimum versi
 
 Recommanded (Oracle JDK 8) [Download this: Linux ARM 32 Hard Float ABI](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html).
 
+sudo tar zxvf jdk-8u271-linux-arm32-vfp-hflt.tar.gz -C /opt
+
+sudo update-alternatives --install "/usr/bin/java" "java" "/opt/jdk1.8.0_271/bin/java" 1
+
+sudo update-alternatives --config java
+
 #### Maven
 
 Install the build tool [Maven](https://maven.apache.org/).
@@ -71,6 +77,27 @@ For installing Adafruit_DHT
 
 > sudo pip3 install Adafruit_DHT
 
+
+pi4 
+
+go  /usr/local/lib/python3.7/dist-packages/Adafruit_DHT/platform_detect.py
+
+
+    if match.group(1) == 'BCM2708':
+        # Pi 1
+        return 1
+    .
+    .
+    .
+    .
+    .// add this line
+    elif match.group(1) == 'BCM2711':
+        # Pi 3b+
+        return 3
+    else:
+        # Something else, not a pi.
+        return None
+        
 #### MySql
 
 > sudo apt install mariadb-server
@@ -83,6 +110,9 @@ Execute the following
 
 > sudo systemctl enable mosquitto.service
 
+curl
+sudo apt-get install libcurl4-openssl-dev
+
 #### Install Boost on RasberyPi
 
 > sudo apt-get install libboost-dev
@@ -94,8 +124,13 @@ After you have taken care of the [Prerequisites](#prerequisites)
 
 Execute the following
 
-> mvn spring-boot:runge
+> mvn spring-boot:run
 
+
+sudo vim /boot/config.txt
+
+gpio=23=pu
+gpio=20=pu
 
 # Installation Problems
 

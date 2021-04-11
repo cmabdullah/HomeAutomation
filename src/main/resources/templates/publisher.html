@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1000/xhtml">
+<head th:replace="common/header :: common-header">
+
+    <title>Temp</title>
+
+</head>
+<body onload="connect()" onunload="disconnect()">
+<div id="main-page" class="container">
+    <div class="row">
+    	<div class="col-md-12">
+            <h1>Publisher</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <form>
+                <div class="form-group">
+                    <label for="name">Live </label>
+                    <input type="text" id="commentary" class="form-control" placeholder="your commentary here...">
+                </div>
+                <button id="publish" class="btn btn-primary" type="submit">Publish</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

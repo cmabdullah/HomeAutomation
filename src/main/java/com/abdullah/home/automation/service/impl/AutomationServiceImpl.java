@@ -43,6 +43,40 @@ public class AutomationServiceImpl implements AutomationService {
         this.hardwareRegistry = hardwareRegistry;
     }
 
+    /*******
+     *
+     *
+     SP -> Switch Physical
+     SR -> Switch Remote
+
+     remote case
+
+     case 1
+     SR -> 1 && SP -> 1 = 1 // SR show by default on, // force off switch physical
+     case 2
+     SR -> 1 && SP -> 0 = 1 // SR show by default off , you have to on  switch remote to active switch remote // disconnect switch physical
+
+     case 3
+     SR -> 0 && SP -> 0 = 0 // SR show by default off
+     case 4
+     SR -> 0 && SP -> 1 = 0 // SR show by default on, you have to off  switch remote to deactive switch remote // disconnect switch physical
+
+
+     physical case
+
+     case 5
+     SP -> 1 && SR -> 1 = 1 // SR show by default on, // force off switch remote
+     case 6
+     SP -> 1 && SR -> 0 = 1 // SR show by default off, you have to active physical switch // disconnect switch remote
+
+     case 7
+     SP -> 0 && SR -> 0 = 0 // SR show by default off
+     case 8
+     SP -> 0 && SR -> 1 = 0 // SR show by default on, you have to off switch physical to deactive switch physical // disconnect switch physical
+     *
+     * @param logicalSwitchInfo
+     */
+
     @Override
     public void changeSwitchStateLogicalRequest(SwitchInfo logicalSwitchInfo) {
 

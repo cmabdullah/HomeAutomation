@@ -41,7 +41,7 @@ spring:
   # ===============================
   mail:
     host: smtp.gmail.com
-    username: mainulhasan3787@gmail.com
+    username: a.kyium.khan@gmail.com
     password: 00
     properties:
       mail:

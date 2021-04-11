@@ -1,12 +1,17 @@
 package com.abdullah.home.automation.hardware.sensor;
 
+import com.abdullah.home.automation.service.impl.AutomationServiceImpl;
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.ByteBuffer;
 
 public class Bmp180 extends Thread {
+
+    private static final Logger logger = LoggerFactory.getLogger(Bmp180.class);
     private static int OVER_SAMPLING_RATE = 1; //Define oversampling rate for Pressure Measurement.
     static ByteBuffer buffer;
     double actualTemperature ;
@@ -112,14 +117,19 @@ public class Bmp180 extends Thread {
 //                System.out.println("Pressure : " + actualPressure);
 //                System.out.println("Altitude : " + altitude);
             } catch (Exception e) {
-                System.out.println(e.getLocalizedMessage());
+                logger.error(e.getLocalizedMessage());
+                try{
+                    Thread.sleep(400);
+                }catch (InterruptedException ex){
+                    logger.error(ex.getLocalizedMessage());
+                }
             }
 
             try{
                 counter++;
                 Thread.sleep(400);
             }catch (InterruptedException e){
-                System.out.println(e.getLocalizedMessage());
+                logger.error(e.getLocalizedMessage());
             }
         }
     }
