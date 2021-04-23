@@ -17,20 +17,24 @@ public class Mqtt {
     public static IMqttClient getInstance() {
         try {
             if (instance == null) {
+                log.debug("================= Mqtt is starting ========================");
                 instance = new MqttClient(Constant.MQTT_SERVER_ADDRESS, Constant.MQTT_PUBLISHER_ID);
-            }
 
-            MqttConnectOptions options = new MqttConnectOptions();
-            options.setAutomaticReconnect(true);
-            options.setCleanSession(true);
-            options.setConnectionTimeout(10);
+                MqttConnectOptions options = new MqttConnectOptions();
+                options.setAutomaticReconnect(true);
+                options.setCleanSession(true);
+                options.setConnectionTimeout(10);
 
-            if (!instance.isConnected()) {
-                instance.connect(options);
+                if (!instance.isConnected()) {
+                    instance.connect(options);
+                }
+                log.debug("================= Mqtt config success ========================");
+                return instance;
             }
         } catch (MqttException e) {
             log.error("mqtt config failed");
-            e.printStackTrace();
+            log.error("================= Mqtt config failed ========================"+e.getLocalizedMessage());
+            //e.printStackTrace();
         }
 
         return instance;

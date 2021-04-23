@@ -10,6 +10,8 @@ import java.io.IOException;
 
 public class Util {
 
+    public static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
     public static final ObjectMapper OBJECT_MAPPER_DEEP_COPY = new ObjectMapper()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
             .registerModule(new JavaTimeModule());
