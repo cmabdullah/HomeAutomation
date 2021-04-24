@@ -75,7 +75,6 @@ $(document).ready(function () {
             console.log(words.length);
             var value = 0;
             if (words.length === 3){
-                console.log(chars[8]);
                 const temp = words[1].split('=');
                 console.log(temp);
                 console.log(temp[1]);
