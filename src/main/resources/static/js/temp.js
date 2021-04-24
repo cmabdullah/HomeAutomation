@@ -69,11 +69,12 @@ $(document).ready(function () {
         //stompClient.subscribe("/topic/" + "" + "/queue/commentary", messageReceived);
         stompClient.subscribe("/user" + "/weatherTemp" + "/queue/commentary", function (temperature) {
 
-            const messages = temperature.body.split(' ');
-            const words = messages.split('  ');
+            const body = new String(temperature.body);
+            //const messages= body.split('  ');
+            const words = body.split('  ');
             console.log(words.length);
             var value = 0;
-            if (words.length === 4){
+            if (words.length === 6){
                 console.log(chars[8]);
                 const temp = words[1].split('=');
                 console.log(temp);
