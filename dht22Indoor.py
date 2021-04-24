@@ -13,9 +13,9 @@ while True:
         millis = int(round(time.time() * 1000))
         # print("IndoorDht22  Temp={0:0.1f}  Humidity={1:0.1f} PublishTime={2:0}".format(temperature, humidity, millis))
 
-        client.publish("weather", "IndoorDht22  Temp={0:0.1f}  Humidity={1:0.1f} PublishTime={2:0}".format(temperature, humidity, millis));
+        client.publish("weather", '{"sensorType":"IndoorDht22",  "Temp":{0:0.1f} , "Humidity":{1:0.1f}, "PublishTime":{2:0}}'.format(temperature, humidity, millis))
     else:
         # print("Failed to retrieve data from humidity sensor indoor")
-        client.publish("weather", "Failed to retrieve data from humidity IndoorDht22");
+        client.publish("weather", '"IndoorDht22Error": Failed to retrieve data from humidity IndoorDht22');
 
 client.disconnect();
