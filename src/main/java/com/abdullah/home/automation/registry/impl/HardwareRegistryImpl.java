@@ -73,8 +73,9 @@ public class HardwareRegistryImpl implements HardwareRegistry {
         //taskExecutor().execute(subscriber);
         if (devProfile.equals("with-hardware")) {
 
-            boolean sensorStatus = sensorContext.runAllWeatherSensor();
-            taskExecutor().execute(subscriber);
+		//comment this block for jdk 11 compatiblity issue
+            boolean sensorStatus = true; //sensorContext.runAllWeatherSensor();
+            //taskExecutor().execute(subscriber);
             log.debug("sensor thread size -> "+ sensorStatus);
             return sensorStatus;
         } else if (devProfile.equals("without-hardware")) {

@@ -3,6 +3,7 @@ package com.abdullah.home.automation.config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 
 import java.io.*;
 import java.util.stream.Collectors;
@@ -14,11 +15,12 @@ import java.util.stream.Collectors;
  * @author C M Abdullah Khan
  * REF:
  */
+@Configuration
 public class SensorInitializer {
 
 	private static final Logger log = LoggerFactory.getLogger(SensorInitializer.class);
 
-	static ProcessBuilder processBuilder = new ProcessBuilder();
+	ProcessBuilder processBuilder = new ProcessBuilder();
 
 	/** Initializes the weather sensor and connects to mosquitto broker
 	 *
@@ -34,13 +36,15 @@ public class SensorInitializer {
 
 			String pwd = System.getProperty("user.dir");
 			String fileName = devProfile.equals("with-hardware") ? "dht22Indoor.py" : "dht22IndoorMock.py";
-			String filePath = pwd + "/" + fileName;
+			String filePath =  pwd+ "/"+fileName;
 			String arg1 = "";
 			String arg2 = "";
 			String[] cmd = {"python3", filePath, arg1, arg2};
 
 			try {
+				log.info("Process Builder executing script ");
 				processBuilder.command(cmd);
+				log.info("processBuilder Starting");
 				subProcessOutput(processBuilder.start());
 				log.info("Subscription has been successfully done !!! ");
 				//System.exit(0);

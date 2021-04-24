@@ -1,5 +1,6 @@
 package com.abdullah.home.automation;
 
+import com.abdullah.home.automation.config.Mqtt;
 import com.abdullah.home.automation.config.SensorInitializer;
 import com.abdullah.home.automation.domain.MainSwitch;
 import com.abdullah.home.automation.registry.HardwareRegistry;
@@ -19,15 +20,17 @@ public class HomeAutomationApplication implements CommandLineRunner {
     private final SwitchService switchService;
     private final DataMigrationService dataMigrationService;
     private final HardwareRegistry hardwareRegistry;
+    private final SensorInitializer sensorInitializer;
 
     private static final Logger log = LoggerFactory.getLogger(HomeAutomationApplication.class);
 
     @Autowired
     public HomeAutomationApplication(SwitchService switchService, DataMigrationService dataMigrationService,
-                                     HardwareRegistry hardwareRegistry) {
+                                     HardwareRegistry hardwareRegistry, SensorInitializer sensorInitializer ) {
         this.switchService = switchService;
         this.dataMigrationService = dataMigrationService;
         this.hardwareRegistry = hardwareRegistry;
+	this.sensorInitializer = sensorInitializer;
     }
 
     public static void main(String[] args) {
@@ -46,9 +49,9 @@ public class HomeAutomationApplication implements CommandLineRunner {
         boolean sensorConfig = hardwareRegistry.sensorConfig();
         log.debug("pi sensorConfig config : " + sensorConfig);
 
-        SensorInitializer sensorInitializer = new SensorInitializer();
+        //SensorInitializer sensorInitializer = new SensorInitializer();
 
         new Thread(sensorInitializer.sensorRunnable).start();
-
+	Mqtt.getInstance();
     }
 }

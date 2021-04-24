@@ -7,6 +7,6 @@ public class Constant {
     public static String REGULATOR_NAME = "";
     //
     public static final String MQTT_PUBLISHER_ID = "spring-server";
-    public static final String MQTT_SERVER_ADDRESS = "tcp://127.0.0.1:1883";
+    public static final String MQTT_SERVER_ADDRESS = "tcp://0.0.0.0:1883";
 
 }

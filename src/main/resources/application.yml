@@ -96,11 +96,11 @@ management:
 #    java:
 #      version: @java.version@
 regulator:
-  mode: VoltageRegulatorFinalShape
+  mode: Regulator2
 #  mode: Regulator2
 
 hardware:
-  hardwareMode: without-hardware
+  hardwareMode: with-hardware
 
   #without-hardware
   #with-hardware
