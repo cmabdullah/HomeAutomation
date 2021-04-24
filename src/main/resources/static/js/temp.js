@@ -64,12 +64,20 @@ $(document).ready(function () {
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/commentary', function (temperature) {
+
+        // Subscribe to the Public Topic
+        //stompClient.subscribe("/topic/" + "" + "/queue/commentary", messageReceived);
+        stompClient.subscribe("/user" + "/weatherTemp" + "/queue/commentary", function (temperature) {
             var jsonData = JSON.parse(temperature.body);
-            console.log(jsonData.comment)
-            var value = jsonData.comment;
+            console.log(jsonData.commentary)
+            var value = jsonData.commentary;
             console.log('value cm: ' + value);
             console.log('temperature cm: ' + jsonData);
+
+            // var v2 = JSON.parse(jsonData);
+            // console.log(v2);
+            // var v = v2.comment;
+            // console.log(v);
 
             $('#temperature').text(value);
             /* Push new data On X-Axis of Chart */

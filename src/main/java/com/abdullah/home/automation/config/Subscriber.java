@@ -6,6 +6,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,10 +24,29 @@ public class Subscriber implements Runnable {
 
     private final SensorReadingService sensorReadingService;
 
+    private SimpMessagingTemplate messagingTemplate;
+
     @Autowired
-    public Subscriber(SensorReadingService sensorReadingService) {
+    public Subscriber(SensorReadingService sensorReadingService, SimpMessagingTemplate messagingTemplate) {
         this.sensorReadingService = sensorReadingService;
+        this.messagingTemplate = messagingTemplate;
     }
+
+    public Runnable listener = () -> {
+        log.info("Subscriber listener started");
+        try {
+            CountDownLatch countDownLatch = new CountDownLatch(10);
+            Mqtt.getInstance().subscribeWithResponse("weather", (s, mqttMessage) -> {
+                String message = new String(mqttMessage.getPayload());
+                messagingTemplate.convertAndSendToUser("weatherTemp","/queue/commentary",message);
+                log.debug("Websocket Subscriber message received : "+message);
+                countDownLatch.countDown();
+            });
+            countDownLatch.await(10000, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException | MqttException e){
+            log.error("Websocket subscribe Mqtt/Interrupt error " + e.getLocalizedMessage());
+        }
+    };
 
     public List<String> subscribeChannel() {
         List<String> messages = new ArrayList<>();
@@ -113,6 +133,7 @@ public class Subscriber implements Runnable {
     //@SneakyThrows
     @Override
     public void run() {
+        log.debug("Subscriber Thread started success");
         while (true) {
             // Do something
 

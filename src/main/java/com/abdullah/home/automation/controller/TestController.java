@@ -64,19 +64,20 @@ public class TestController {
             mqttSubscribeModel.setMessage(new String(mqttMessage.getPayload()));
             mqttSubscribeModel.setQos(mqttMessage.getQos());
             messages.add(mqttSubscribeModel);
+            System.out.println("mqttSubscribeModel "+ mqttSubscribeModel);
             countDownLatch.countDown();
         });
 
         countDownLatch.await(10000, TimeUnit.MILLISECONDS);
 
-        String str = messages.get(0).getMessage();
-
-        String[] arr = str.split("\n");
-
-        for (String s: arr
-        ) {
-            System.out.println(s);
-        }
+//        String str = messages.get(0).getMessage();
+//
+//        String[] arr = str.split("\n");
+//
+//        for (String s: arr
+//        ) {
+//            System.out.println(s);
+//        }
 
         return messages;
     }
