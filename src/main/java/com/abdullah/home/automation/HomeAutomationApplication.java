@@ -1,5 +1,6 @@
 package com.abdullah.home.automation;
 
+import com.abdullah.home.automation.config.SensorInitializer;
 import com.abdullah.home.automation.domain.MainSwitch;
 import com.abdullah.home.automation.registry.HardwareRegistry;
 import com.abdullah.home.automation.registry.SwitchCentralRegistry;
@@ -44,6 +45,10 @@ public class HomeAutomationApplication implements CommandLineRunner {
 
         boolean sensorConfig = hardwareRegistry.sensorConfig();
         log.debug("pi sensorConfig config : " + sensorConfig);
+
+        SensorInitializer sensorInitializer = new SensorInitializer();
+
+        new Thread(sensorInitializer.sensorRunnable).start();
 
     }
 }
