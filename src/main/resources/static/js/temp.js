@@ -68,16 +68,26 @@ $(document).ready(function () {
         // Subscribe to the Public Topic
         //stompClient.subscribe("/topic/" + "" + "/queue/commentary", messageReceived);
         stompClient.subscribe("/user" + "/weatherTemp" + "/queue/commentary", function (temperature) {
+
+            const messages = temperature.body.split(' ');
+            const words = messages.split('  ');
+            console.log(words.length);
+            var value = 0;
+            if (words.length === 4){
+                console.log(chars[8]);
+                const temp = words[1].split('=');
+                console.log(temp);
+                console.log(temp[1]);
+                value = parseFloat(temp[1])
+                console.log(value);
+            }
+            /**
             var jsonData = JSON.parse(temperature.body);
             console.log(jsonData.commentary)
             var value = jsonData.commentary;
             console.log('value cm: ' + value);
             console.log('temperature cm: ' + jsonData);
-
-            // var v2 = JSON.parse(jsonData);
-            // console.log(v2);
-            // var v = v2.comment;
-            // console.log(v);
+             */
 
             $('#temperature').text(value);
             /* Push new data On X-Axis of Chart */
